@@ -1,5 +1,7 @@
 # 6620_1c_2017
 
+Informe: https://www.overleaf.com/8670630sfcdvtgcrqqx
+
 <b>Aclaraciones TP0 ( ya validadas con el docente):</b>
 <ul>
   <li>Como espacios en blanco usamos de separador "\t\n\r\r\n":
