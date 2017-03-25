@@ -7,18 +7,27 @@
 #define LONGEST_LINE 1000
 #define WORD_SEPARATORS "\r\t\n \r\n" //Separadores: Tab, nueva linea, y espacio en blanco.
 typedef int bool;
-
+bool useBubbleSort = true;
 int amountOfWordsInFile(FILE *inputFile);
 
 //Imprime una palabra por linea
-void printArray(char *arrayWords[], int amountOfWords);
+void printArray(char *arrayWords[], int amountOfWords, char *argv[]);
 void freeArray(char *arrayWords[], int amountOfWords);
 
-int main() {
-	bool useBubbleSort = true;
+int main(int argc, char *argv[]) {
+	if (argc <= 1 ){
+		printf("Error: No se indicó archivo.\n");
+		return 1;
+	}
+
+	//Por defecto se usa Bubblesort, salvo especificado en los argumentos
+	//Refactorizar con getopt
+	if( (argv[2] != NULL) && (strcmp(argv[2],"-q") == 0)){
+		useBubbleSort = false;
+	}
 
 	FILE *inputFile;
-	inputFile = fopen("lorem", "r");
+	inputFile = fopen(argv[1], "r");
 
 	int amountOfWords = amountOfWordsInFile(inputFile);
     char *arrayOfWords[amountOfWords];
@@ -49,22 +58,25 @@ int main() {
 	}
 	fclose(inputFile);
 
-	if (useBubbleSort == true)
+	if (useBubbleSort)
 		bubbleSort(arrayOfWords,amountOfWords);
 	else
 		quickSort(arrayOfWords,amountOfWords);
 
-	printArray(arrayOfWords, amountOfWords);
+	printArray(arrayOfWords, amountOfWords, argv);
 	freeArray(arrayOfWords, amountOfWords);
 	return 0;
 }
 
-void printArray(char *arrayOfWords[], int amountOfWords){
+void printArray(char *arrayOfWords[], int amountOfWords, char *argv[]){
     int i;
     for(i = 0; i <= amountOfWords-1; i++){
         if (arrayOfWords[i] != NULL)
             printf("%s\n",arrayOfWords[i]);
     }
+    printf("\nArchivo %s\n", argv[1]);
+    printf("%s #Compares: %d\n",(useBubbleSort) ? "Bubblesort ":"Quicksort", getComparesCount());
+    printf("%s #Swaps: %d\n",(useBubbleSort) ? "Bubblesort ":"Quicksort", getSwapsCount());
 }
 
 int amountOfWordsInFile(FILE *inputFile){
