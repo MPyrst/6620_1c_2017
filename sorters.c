@@ -5,8 +5,8 @@
 #define false 0
 typedef int bool;
 
-static int swapsCount = 0;
-static int comparesCount = 0;
+static unsigned long long int swapsCount = 0;
+static unsigned long long int comparesCount = 0;
 
 void bubbleSort(char *arrayOfWords[], int length){
     int i, j;
@@ -61,10 +61,10 @@ void quickSort(char *arrayOfWords[], int length){
     quickSort(arrayOfWords + pivot, length - pivot);
 }
 
-int getSwapsCount(){
+unsigned long long int getSwapsCount(){
 	return swapsCount;
 }
 
-int getComparesCount(){
+unsigned long long int getComparesCount(){
 	return comparesCount;
 }

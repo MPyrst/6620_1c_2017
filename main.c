@@ -75,8 +75,8 @@ void printArray(char *arrayOfWords[], int amountOfWords, char *argv[]){
             printf("%s\n",arrayOfWords[i]);
     }
     printf("\nArchivo %s\n", argv[1]);
-    printf("%s #Compares: %d\n",(useBubbleSort) ? "Bubblesort ":"Quicksort", getComparesCount());
-    printf("%s #Swaps: %d\n",(useBubbleSort) ? "Bubblesort ":"Quicksort", getSwapsCount());
+    printf("%s #Compares: %llu\n",(useBubbleSort) ? "Bubblesort ":"Quicksort", getComparesCount());
+    printf("%s #Swaps: %llu\n",(useBubbleSort) ? "Bubblesort ":"Quicksort", getSwapsCount());
 }
 
 int amountOfWordsInFile(FILE *inputFile){
