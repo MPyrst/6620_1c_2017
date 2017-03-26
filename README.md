@@ -28,4 +28,10 @@ Build steps from root folder:
 
 3- make
 
-4- ./6620_1c_2017
+4- ./tp0
+
+#Functional tests
+
+Run steps:
+
+./functionalTests.sh "$EXECUTABLE_PATH"
