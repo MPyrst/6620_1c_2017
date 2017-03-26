@@ -16,3 +16,16 @@ Informe: https://www.overleaf.com/8670630sfcdvtgcrqqx
   <li>Ordenamiento case sensitive, usando strcmp().</li>
   <li>Se cuenta como caracter al inicio del archivo, por eso la primer palabra en los textos de /archivos queda al final después de ordenar.</li>
 </ul>
+
+
+#cMake based project
+
+Build steps from root folder:
+
+1- mkdir build && cd build
+
+2- cmake ..
+
+3- make
+
+4- ./6620_1c_2017
