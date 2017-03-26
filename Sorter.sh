@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 #	Usage: ./Sorter.sh filename
 
 # 	Input: filename

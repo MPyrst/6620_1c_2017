@@ -78,8 +78,6 @@ void printArray(char *arrayOfWords[], int amountOfWords, char *argv[]) {
     }
 
     printf("\nArchivo %s\n", argv[1]);
-    printf("%s #Compares: %llu\n", (useBubbleSort) ? "BubbleSort " : "QuickSort", getComparesCount());
-    printf("%s #Swaps: %llu\n", (useBubbleSort) ? "BubbleSort " : "QuickSort", getSwapsCount());
 }
 
 

@@ -5,9 +5,6 @@
 #define false 0
 typedef int bool;
 
-static unsigned long long int swapsCount = 0;
-static unsigned long long int comparesCount = 0;
-
 void bubbleSort(char *arrayOfWords[], int length) {
     int i, j;
     for (i = 0; i < length; i++) {
@@ -25,13 +22,11 @@ void bubbleSort(char *arrayOfWords[], int length) {
 }
 
 int compare(char *word1, char *word2) {
-    comparesCount++;
     int cmp = strcmp(word1, word2);
     return cmp;
 }
 
 void swap(char *arrayOfWords[], int position1, int position2) {
-    swapsCount++;
     char *auxPtr = arrayOfWords[position2];
     arrayOfWords[position2] = arrayOfWords[position1];
     arrayOfWords[position1] = auxPtr;
@@ -49,8 +44,9 @@ void quickSort(char *arrayOfWords[], int length) {
     // reset the pivot index to zero, then scan
     for (i = 0; i < length - 1; ++i) {
         //if (strcmp(arrayOfWords[i], arrayOfWords[length-1]) < 0)
-        if (compare(arrayOfWords[i], arrayOfWords[length - 1]) < 0)
+        if (compare(arrayOfWords[i], arrayOfWords[length - 1]) < 0) {
             swap(arrayOfWords, i, pivot++);
+        }
     }
 
     // move the pivot value into its place
@@ -59,12 +55,4 @@ void quickSort(char *arrayOfWords[], int length) {
     // and invoke on the subsequences. does NOT include the pivot-slot
     quickSort(arrayOfWords, pivot++);
     quickSort(arrayOfWords + pivot, length - pivot);
-}
-
-unsigned long long int getSwapsCount() {
-    return swapsCount;
-}
-
-unsigned long long int getComparesCount() {
-    return comparesCount;
 }
