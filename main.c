@@ -47,10 +47,7 @@ int main(int argc, char *argv[]) {
 
             size_t wordLength = strlen(cp);
             char *ptr = malloc(sizeof(char) * (wordLength + 1));
-            int z;
-            for (z = 0; z <= wordLength - 1; z++) {
-                ptr[z] = cp[z];
-            }
+            strcpy(ptr, cp);
 
             arrayOfWords = realloc(arrayOfWords, (amountOfWords + 1) * sizeof(char *));
             arrayOfWords[amountOfWords] = ptr;
@@ -62,21 +59,21 @@ int main(int argc, char *argv[]) {
 
     printf("Amount of words: %d", amountOfWords);
     fclose(inputFile);
-/*
+
     if (useBubbleSort) {
         bubbleSort(arrayOfWords, amountOfWords);
     } else {
         quickSort(arrayOfWords, amountOfWords);
     }
 
-    printArray(arrayOfWords, amountOfWords, argv);*/
+    printArray(arrayOfWords, amountOfWords, argv);
     freeArray(arrayOfWords, amountOfWords);
     return 0;
 }
 
 void printArray(char *arrayOfWords[], int amountOfWords, char *argv[]) {
     int i;
-    for (i = 0; i <= amountOfWords; i++) {
+    for (i = 0; i <= amountOfWords - 1; i++) {
         printf("(%s)\n", arrayOfWords[i]);
     }
 
