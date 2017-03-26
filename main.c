@@ -29,8 +29,12 @@ int main(int argc, char *argv[]) {
         useBubbleSort = false;
     }
 
-    FILE *inputFile;
-    inputFile = fopen(argv[1], "r");
+    FILE *inputFile = fopen(argv[1], "r");
+    if (inputFile == NULL) {
+        printf("Error: No se indicó archivo.\n");
+        return 1;
+    }
+
     char **arrayOfWords = NULL;
 
     rewind(inputFile);
