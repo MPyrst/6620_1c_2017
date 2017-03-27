@@ -92,5 +92,3 @@ void freeArray(char *arrayWords[], int amountOfWords) {
     }
     free(arrayWords);
 }
-
-
