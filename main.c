@@ -85,7 +85,7 @@ int main(int argc, char *argv[]) {
                 if (optopt == 'o' || optopt == 'i') {
                     fprintf(stderr, "Option -%c requires an argument.\n", optopt);
                 } else if (isprint (optopt)) {
-                    fprintf(stderr, "Unknown argument `-%c'.\n", optopt);
+                    fprintf(stderr, "Unknown argument '-%c'.\n", optopt);
                 } else {
                     fprintf(stderr, "Unknown option character `\\x%x'.\n", optopt);
 
@@ -106,7 +106,7 @@ int main(int argc, char *argv[]) {
     if (input != NULL) {
         inputFile = fopen(input, "r");
         if (inputFile == NULL) {
-            printError("fatal: cannot open output file.");
+            printError("fatal: cannot open input file.");
             exit(EXIT_FAILURE);
         }
     }

@@ -12,16 +12,23 @@ else
 fi
 }
 
-#1. No valid input
-no_valid_users=("" "noValid" "elisa" "./build/elisa.txt ./build/alice.png")
-for var in "${no_valid_users[@]}"
+#1. No input
+output="$($1 -i 2>&1)"
+test_output="Option -i requires an argument."
+expect "$output" "$test_output"
+
+
+##2. No valid input
+no_valid_inputs=("noValid" "elisa" "./build/elisa.txt ./build/alice.png")
+for var in "${no_valid_inputs[@]}"
 do
-    output="$($1 -i ${var})"
-    test_output='Error: No se indicó archivo.'
+    output="$($1 -i ${var} 2>&1)"
+    test_output='fatal: cannot open input file.'
     expect "$output" "$test_output"
 done
 
-#2. Help should be printed to stout (only first line verify)
+
+##3. Help should be printed to stout (only first line verify)
 help_options=("-h" "--help")
 for var in "${help_options[@]}"
 do
@@ -30,18 +37,21 @@ do
     expect "$output" "$test_output"
 done
 
-#3. Print version
+#4. Print version
 version_options=("-V" "--version")
 for var in "${version_options[@]}"
 do
     output="$($1 ${var})"
-    test_output='v1.0'
+    test_output='This is version 1.0 from tpo: Basic infrastructure.'
     expect "$output" "$test_output"
 done
 
-#4. Should verify file creation
+test_file="testFile.txt"
+echo "This is a test File">$test_file
+
+#5. Should verify file creation
 output_file="./testOutput.txt"
-output="$($1 -i ./testFile.txt -o $output_file)"
+output="$($1 -i $test_file -o $output_file 2>&1)"
 if [ -f "$output_file" ];
 then
    echo "Test OK"
@@ -49,12 +59,14 @@ else
    echo "Test FAILED: File $output_file does not exist"
 fi
 
-#5. Should show usage if no valid option passed (only first line verify)
-help_options=("-a" "-p" "--in" "")
-for var in "${help_options[@]}"
+rm $test_file
+
+#6. Should show usage if no valid option passed (only first line verify)
+unknown_arguments=("-a" "-p" "-c")
+for var in "${unknown_arguments[@]}"
 do
-    output=$(printf "$($1 ${var})" | head -1)
-    test_output='Usage:'
+    output="$($1 ${var} 2>&1)"
+    test_output="Unknown argument '${var}'."
     expect "$output" "$test_output"
 done
 
