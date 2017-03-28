@@ -102,7 +102,7 @@ int main(int argc, char *argv[]) {
 
      FILE *inputFile;
 
-     /* ouptut value */
+     /* input value */
     if (input != NULL) {
         inputFile = fopen(input, "r");
         if (inputFile == NULL) {
