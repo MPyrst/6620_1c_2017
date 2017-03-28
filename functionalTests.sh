@@ -71,3 +71,11 @@ do
 done
 
 
+no_valid_characters=("--0" "--a1" "--59")
+for var in "${no_valid_characters[@]}"
+do
+    output="$($1 ${var} 2>&1)"
+    test_output="Unknown option character '\x0'."
+    expect "$output" "$test_output"
+done
+
