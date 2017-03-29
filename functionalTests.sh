@@ -85,3 +85,8 @@ output="$($1 -i $test_file 2>&1)"
 test_output="Empty input file."
 expect "$output" "$test_output"
 rm $test_file
+
+#9. Can not use both sort methods at the same time
+output="$($1 -q -b -i $test_file 2>&1)"
+test_output="fatal: cannot use quicksort and bubblesort at the same time."
+expect "$output" "$test_output"

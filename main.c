@@ -232,4 +232,6 @@ void closeFile(FILE *file) {
 }
 
 
-void printError(char *message) { fputs(message, stderr); }
+void printError(char *message) {
+    fputs(message, stderr);
+}
