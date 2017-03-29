@@ -46,10 +46,9 @@ do
     expect "$output" "$test_output"
 done
 
+#5. Should verify file creation
 test_file="testFile.txt"
 echo "This is a test File">$test_file
-
-#5. Should verify file creation
 output_file="./testOutput.txt"
 output="$($1 -i $test_file -o $output_file 2>&1)"
 if [ -f "$output_file" ];
@@ -70,7 +69,7 @@ do
     expect "$output" "$test_output"
 done
 
-
+#7. No valid options
 no_valid_characters=("--0" "--a1" "--59")
 for var in "${no_valid_characters[@]}"
 do
@@ -79,3 +78,10 @@ do
     expect "$output" "$test_output"
 done
 
+
+#8. Empty file
+touch $test_file
+output="$($1 -i $test_file 2>&1)"
+test_output="Empty input file."
+expect "$output" "$test_output"
+rm $test_file
