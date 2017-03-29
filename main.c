@@ -216,6 +216,12 @@ void printArray(char *wordsArray[], unsigned int amountOfWords, FILE *outputStre
     unsigned int i;
     for (i = 0; i <= amountOfWords - 1; i++) {
         fprintf(out, "%s\n", wordsArray[i]);
+        //Check if write was successful
+        if (ferror(out)) {
+            freeArray(wordsArray, amountOfWords);
+            closeFile(out);
+            exit(EXIT_FAILURE);
+        }
     }
 }
 
