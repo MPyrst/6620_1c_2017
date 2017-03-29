@@ -11,7 +11,8 @@
 #define false 0
 #define LONGEST_LINE 1024
 
-#define WORD_SEPARATORS "\" .,;:¿?'¡!—-_·&*#\n\r\t\f\v()[]{}~%<>|"
+/*#define WORD_SEPARATORS "\" .,;:¿?'¡!—-_·&*#\n\r\t\f\v()[]{}~%<>|"*/
+#define WORD_SEPARATORS "\r\t\n \r\n" //Separadores: Tab, nueva linea, y espacio en blanco.
 typedef int bool;
 bool useBubbleSort = true;
 bool haveQuickSort = false;
