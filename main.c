@@ -10,10 +10,8 @@
 #define true 1
 #define false 0
 #define LONGEST_LINE 1024
-/************************************************************************************/
-/* Que les parecen??? WORD_SEPARATORS "\" .,;:¿?'¡!—-_·&*#\n\r\t\f\v()[]{}~%<>|"    */
-/************************************************************************************/
-#define WORD_SEPARATORS "\r\t\n \r\n" //Separadores: Tab, nueva linea, y espacio en blanco.
+
+#define WORD_SEPARATORS "\" .,;:¿?'¡!—-_·&*#\n\r\t\f\v()[]{}~%<>|"
 typedef int bool;
 bool useBubbleSort = true;
 bool haveQuickSort = false;
@@ -149,8 +147,7 @@ int main(int argc, char *argv[]) {
                 printError("fatal: Malloc failed");
                 fclose(inputStream);
                 fclose(outputStream);
-                freeArray(wordsArray, amountOfWords
-                );
+                freeArray(wordsArray, amountOfWords);
                 exit(EXIT_FAILURE);
             }
 
@@ -162,8 +159,7 @@ int main(int argc, char *argv[]) {
                 printError("fatal: Malloc failed");
                 fclose(inputStream);
                 fclose(outputStream);
-                freeArray(wordsArray, amountOfWords
-                );
+                freeArray(wordsArray, amountOfWords);
                 exit(EXIT_FAILURE);
             }
 
@@ -216,8 +212,6 @@ void printArray(char *wordsArray[], unsigned int amountOfWords, FILE *outputStre
     if (out == NULL) {
         out = stdout;
     }
-
-    printf("\n%d\n", amountOfWords);
 
     unsigned int i;
     for (i = 0; i <= amountOfWords - 1; i++) {
