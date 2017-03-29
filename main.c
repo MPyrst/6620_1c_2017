@@ -5,10 +5,11 @@
 #include <unistd.h>
 #include <getopt.h>
 #include <string.h>
+#include <sys/stat.h>
 
 #define true 1
 #define false 0
-#define LONGEST_LINE 1000
+#define LONGEST_LINE 1024
 /************************************************************************************/
 /* Que les parecen??? WORD_SEPARATORS "\" .,;:¿?'¡!—-_·&*#\n\r\t\f\v()[]{}~%<>|"    */
 /************************************************************************************/
@@ -18,12 +19,11 @@ bool useBubbleSort = true;
 bool haveQuickSort = false;
 bool haveBubbleSort = false;
 
-int amountOfWordsInFile(FILE *inputFile);
+void freeArray(char *wordsArray[], unsigned int amountOfWords);
 
-//Imprime una palabra por linea
-void printArray(char *arrayWords[], int amountOfWords, char *input);
+void printArray(char *arrayWords[], unsigned int amountOfWords, FILE *outputStream);
 
-void freeArray(char *arrayWords[], int amountOfWords);
+void closeFile(FILE *inputFile);
 
 void printError(char *message);
 
@@ -33,39 +33,39 @@ int main(int argc, char *argv[]) {
     char *output = NULL;
 
     static struct option long_options[] =
-        {
-            /* These options don’t set a flag.
-             We distinguish them by their indices. */
-          {"version", no_argument, 0, 'V'},
-          {"help",   no_argument,0, 'h'},
-          {"output", required_argument, 0, 'o'},
-          {"input",  required_argument, 0, 'i'},
-          {"qsort",  no_argument, 0, 'q'},
-          {"bsort",  no_argument, 0, 'b'},
-          {0, 0, 0, 0}
-        };
+    {
+    /* These options don’t set a flag.
+     We distinguish them by their indices. */
+    {"version", no_argument,       0, 'V'},
+    {"help",    no_argument,       0, 'h'},
+    {"output",  required_argument, 0, 'o'},
+    {"input",   required_argument, 0, 'i'},
+    {"qsort",   no_argument,       0, 'q'},
+    {"bsort",   no_argument,       0, 'b'},
+    {0, 0,                         0, 0}
+    };
 
-   opterr = 0;
-   int option_index = 0;
+    opterr = 0;
+    int option_index = 0;
 
     while ((parameter = getopt_long(argc, argv, "Vhqb:o:i:",
-                       long_options, &option_index)) != -1)
+                                    long_options, &option_index)) != -1)
         switch (parameter) {
             case 'V':
                 printf("This is version 1.0 from tpo: Basic infrastructure.\n");
                 exit(EXIT_FAILURE);
             case 'h':
-                printf( "Usage:\n"
-                            " tp0 -h\n"
-                            " tp0 -V\n"
-                            " tp0 [options] file\n"
-                        "Options:\n"
-                            " -V, --version print version and quit.\n"
-                            " -h, --help Print this information.\n"
-                            " -o, --output Path to output file.\n"
-                            " -i, --intput Path to input file.\n"
-                            " -q, --qsort Use quicksort.\n"
-                            " -b, --bsort Use bubblesort.");
+                printf("Usage:\n"
+                       " tp0 -h\n"
+                       " tp0 -V\n"
+                       " tp0 [options] file\n"
+                       "Options:\n"
+                       " -V, --version print version and quit.\n"
+                       " -h, --help Print this information.\n"
+                       " -o, --output Path to output file.\n"
+                       " -i, --intput Path to input file.\n"
+                       " -q, --qsort Use quicksort.\n"
+                       " -b, --bsort Use bubblesort.");
                 exit(EXIT_FAILURE);
             case 'o':
                 output = optarg;
@@ -98,88 +98,138 @@ int main(int argc, char *argv[]) {
     if (haveBubbleSort && haveQuickSort) {
         printError("fatal: cannot use quicksort and bubblesort at the same time.");
         exit(EXIT_FAILURE);
-     }
+    }
 
-     FILE *inputFile;
+    FILE *inputStream = NULL;
+    FILE *outputStream = NULL;
 
-     /* input value */
+    /* input value */
     if (input != NULL) {
-        inputFile = fopen(input, "r");
-        if (inputFile == NULL) {
+        inputStream = fopen(input, "r");
+        if (inputStream != NULL) {
+            struct stat st;
+            if (stat(input, &st) != 0) {
+                printError("Invalid input file.\n");
+                return EXIT_FAILURE;
+            } else if (st.st_size == 0) {
+                printError("Empty input file.\n");
+                exit(EXIT_FAILURE);
+            }
+        } else {
             printError("fatal: cannot open input file.");
             exit(EXIT_FAILURE);
         }
     }
 
-     FILE *outputFile;
-
-    /* ouptut value */
+/* ouptut value */
     if (output != NULL) {
-        outputFile = fopen(output, "w");
-        if (outputFile == NULL) {
+        outputStream = fopen(output, "w");
+        if (outputStream == NULL) {
             printError("fatal: cannot open output file.");
+            closeFile(inputStream);
             exit(EXIT_FAILURE);
         }
-    } else {//stdout
-        outputFile = stdout;
     }
 
-    char **arrayOfWords = NULL;
+    char **wordsArray = NULL;
 
-    rewind(inputFile);
-    int amountOfWords = 0;
-    char *cp, *bp;
+
+    unsigned int amountOfWords = 0L;
+    char *token;
     char line[LONGEST_LINE];
-    while (fgets(line, sizeof(line), inputFile) != NULL) {
-        bp = line;
-        while (1) {
-            cp = strtok(bp, WORD_SEPARATORS);
-            bp = NULL;
-            if (cp == NULL)
-                break;
+    while (fgets(line, sizeof(line), inputStream) != NULL) {
 
-            size_t wordLength = strlen(cp);
-            char *ptr = malloc(sizeof(char) * (wordLength + 1));
-            strcpy(ptr, cp);
+        token = strtok(line, WORD_SEPARATORS);
+/* walk through other tokens */
+        while (token != NULL) {
+            size_t wordLength = strlen(token);
+            char *word = malloc(sizeof(char) * (wordLength + 1));
 
-            arrayOfWords = realloc(arrayOfWords, (amountOfWords + 1) * sizeof(char *));
-            arrayOfWords[amountOfWords] = ptr;
-            //printf("palabra: %s\n", arrayOfWords[amountOfWords]);
+            if (word == NULL) {
+                printError("fatal: Malloc failed");
+                fclose(inputStream);
+                fclose(outputStream);
+                freeArray(wordsArray, amountOfWords
+                );
+                exit(EXIT_FAILURE);
+            }
 
+            strcpy(word, token
+            );
+            wordsArray = realloc(wordsArray, (amountOfWords + 1) * sizeof(char *));
+
+            if (wordsArray == NULL) {
+                printError("fatal: Malloc failed");
+                fclose(inputStream);
+                fclose(outputStream);
+                freeArray(wordsArray, amountOfWords
+                );
+                exit(EXIT_FAILURE);
+            }
+
+            wordsArray[amountOfWords] = word;
+            //printf("Palabra: %s\n", wordsArray[amountOfWords]);
             amountOfWords++;
+            token = strtok(NULL, WORD_SEPARATORS);
         }
     }
 
-    printf("Amount of words: %d", amountOfWords);
-    fclose(inputFile);
+    //printf("Amount of words: %u\n", amountOfWords);
+    closeFile(inputStream);
 
     if (useBubbleSort) {
-        bubbleSort(arrayOfWords, amountOfWords);
+        bubbleSort(wordsArray, amountOfWords
+        );
     } else {
-        quickSort(arrayOfWords, amountOfWords);
+        quickSort(wordsArray, amountOfWords
+        );
     }
 
-    printArray(arrayOfWords, amountOfWords, input);
-    freeArray(arrayOfWords, amountOfWords);
-    return 0;
+    printArray(wordsArray, amountOfWords, outputStream);
+    freeArray(wordsArray, amountOfWords);
+    closeFile(outputStream);
+    return EXIT_SUCCESS;
 }
 
-void printArray(char *arrayOfWords[], int amountOfWords, char *input) {
-    int i;
+void freeArray(char *wordsArray[], unsigned int amountOfWords) {
+
+    if (amountOfWords == 0) {
+        return;
+    }
+
+    unsigned int i;
     for (i = 0; i <= amountOfWords - 1; i++) {
-        printf("(%s)\n", arrayOfWords[i]);
+        free(wordsArray[i]);
     }
 
-    printf("\nArchivo %s\n", input);
+    free(wordsArray);
 }
 
+void printArray(char *wordsArray[], unsigned int amountOfWords, FILE *outputStream) {
 
-void freeArray(char *arrayWords[], int amountOfWords) {
-    int i = 0;
+    if (amountOfWords == 0) {
+        return;
+    }
+
+    FILE *out = outputStream;
+
+    if (out == NULL) {
+        out = stdout;
+    }
+
+    printf("\n%d\n", amountOfWords);
+
+    unsigned int i;
     for (i = 0; i <= amountOfWords - 1; i++) {
-        free(arrayWords[i]);
+        fprintf(out, "%s\n", wordsArray[i]);
     }
-    free(arrayWords);
 }
 
-void printError(char *message) { fprintf(stderr, "%s\n", message); }
+void closeFile(FILE *file) {
+    if (file != NULL) {
+        fclose(file);
+    }
+}
+
+
+void printError(char *message) { fputs(message, stderr); }
