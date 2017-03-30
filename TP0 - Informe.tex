@@ -27,13 +27,13 @@
 
 %%%%%%%%%  Datos  %%%%%%%%%
 
-\title{ \textbf{Trabajo pr\'actico 0: Infraestructura b\'asica' }
+\title{ \textbf{Trabajo pr\'actico 0: Infraestructura b\'asica } }
 
 \author{Contini, Agust\'in - \textit{Padr\'on 89180}			\\
             \texttt{ agscontini@gmail.com }				\\
-            Farina, Federico - \textit{Padr\'on 93376}			\\
+            Farina, Federico - \textit{Padr\'on 90177}			\\
             \texttt{ federicojosefarina@gmail.com }				\\
-            Prystupiuk, Maximiliano  - \textit{Padr\'on 92333}			\\
+            Prystupiuk, Maximiliano  - \textit{Padr\'on 94  }			\\
             \texttt{ mprystupiuk@gmail.com  }					\\[2.5ex]
             1er. Cuatrimestre de 2017					\\[1.0ex]
             \normalsize{66.20 Organizaci\'on de Computadoras}		\\
@@ -56,7 +56,7 @@
 \thispagestyle{empty}	% quita el numero en la primera pagina
 
 \begin{abstract}
-El trabajo práctico consiste en implementar el algoritmo de ordenamiento Quicksort y BubbleSort en lenguaje C, para luego comparar sus respectivas performance.
+El trabajo práctico consiste en implementar el algoritmo de ordenamiento Quicksort y BubbleSort en lenguaje C, las funciones swap y compare, para luego comparar sus respectivas performance y la cantidad de llamados a swap y compare.
 \end{abstract}
 
 %%%%%%%%%  Fin 1era hoja  %%%%%%%%%
@@ -153,31 +153,42 @@ La raz\'on por la cual decidimos hacer una versi\'on corrida para Linux y otra p
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[scale=0.9]{./recursos/graficoTiemposDeSortsMSeg.png}
-	\caption{Tabla de los tiempos de los algoritmos de ordenamiento}
+	\includegraphics[scale=0.7]{./recursos/bubblesort.png}
+	\caption{Tabla de los tiempos del algoritmo de ordenamiento bubblesort}
 \end{figure}
-
-\subsubsection{Gr\'aficos comparando los sort}
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[scale=0.9]{./recursos/graficoComparacionLinuxMSeg.png}
-	\caption{Gr\'afico comparando los tiempos de los sorts corridos en Linux}
+	\includegraphics[scale=0.7]{./recursos/quicksort.png}
+	\caption{Tabla de los tiempos del algoritmo de ordenamiento quicksort}
+\end{figure}
+
+
+\subsubsection{Gr\'aficos comparando los swaps de los sort}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.7]{./recursos/swapVsPala.png}
+	\caption{Gr\'afico comparando la cantidad de swaps de los sorts corridos en Linux}
+\end{figure}
+
+\subsubsection{Gr\'aficos comparando los compare de los sort}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[scale=0.7]{./recursos/compareVsPala.png}
+	\caption{Gr\'afico comparando la cantidad de compare de los sorts corridos en Linux}
 \end{figure}
 
 \bigskip
-Como podemos apreciar, con escala lineal para el eje y (tiempo tardado del sort), por la abismal diferencia entre el Bubblesort y ?????????, \'esta \'ultima no posee pendiente. As\'i que presentamos el mismo gr\'afico, pero con escala logar\'itmica en el eje y, para poder ver mejor las diferencias.
+Como podemos apreciar, con escala lineal para el eje y (tiempo tardado del sort), por la abismal diferencia entre el Bubblesort y Quicksort, \'esta \'ultima no posee pendiente. As\'i que presentamos el mismo gr\'afico, pero con escala logar\'itmica en el eje y, para poder ver mejor las diferencias.
+
+\subsubsection{Gr\'aficos comparando los tiempos de los sort por palabras}
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[scale=0.9]{./recursos/graficoComparacionLinuxMSegLogScale.png}
-	\caption{Gr\'afico comparando los tiempos de los sorts corridos en Linux, con escala logar\'itmica}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[scale=0.9]{./recursos/graficoComparacionGxemulMSeg.png}
-	\caption{Gr\'afico comparando los tiempos de los sorts corridos en Gxemul}
+	\includegraphics[scale=0.7]{./recursos/ejecVsPala.png}
+	\caption{Gr\'afico comparando la cantidad de tiempo de los sorts corridos en Linux por palabras del documento}
 \end{figure}
 
 
@@ -204,19 +215,16 @@ La f\'ormula para calcularlo es la siguiente:
 En nuestro caso:
 
 \begin{center}
-	\scalebox{1.8}{ $ SpeedUp = \frac {T_{bubblesort}} {T_{?????????}} $ }
+	\scalebox{1.8}{ $ SpeedUp = \frac {T_{bubblesort}} {T_{quicksort}} $ }
 \end{center}
-\smallskip
-\begin{center}
-	\scalebox{1.8}{ $ SpeedUp = \frac {T_{????????? en C}} {T_{????????? en assembler}} $ }
-\end{center}
+
 
 \bigskip
 Reemplazando con los datos antes mencionados:
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[scale=0.9]{./recursos/graficoSpeedups.png}
+	\includegraphics[scale=0.7]{./recursos/SpeedUpAlgoritmos.png}
 	\caption{Tabla de los speedups obtenidos de los sorts}
 \end{figure}
 
@@ -224,15 +232,8 @@ Reemplazando con los datos antes mencionados:
 Pasamos los datos antes calculados a un gr\'afico para observar mejor c\'omo evoluciona el Speedup.
 \begin{figure}[h!]
 	\centering
-	\includegraphics[scale=0.9]{./recursos/graficoBBvsSSC.png}
-	\caption{Gr\'afico del speedup entre Bubblsort en C y ????????? en C}
-\end{figure}
-
-\newpage
-\begin{figure}[h!]
-	\centering
-	\includegraphics[scale=0.9]{./recursos/graficoSSAvsSSC.png}
-	\caption{Gr\'afico del speedup entre ????????? y ????????? en C}
+	\includegraphics[scale=0.7]{./recursos/speedUpMuestra.png}
+	\caption{Gr\'afico del speedup entre Bubblsort en C y Quicksort en C}
 \end{figure}
 
 \bigskip
@@ -253,17 +254,17 @@ Los posteriores cálculos de los Speedups permitieron dar una idea más concisa 
 
 \subsection{sorters.h}
 \lstset{ language = C, numbers=left, tabsize=4, breaklines=true, frame=single }
-\lstinputlisting{../sorters.h}
+\lstinputlisting{./sorters.h}
 
 \bigskip
 \subsection{sorters.c}
 \lstset{ language = C, numbers=left, tabsize=4, breaklines=true, frame=single }
-\lstinputlisting{../sorters.c}
+\lstinputlisting{./sorters.c}
 
 \bigskip
 \subsection{main.c}
 \lstset{ language = C, numbers=left, tabsize=4, breaklines=true, frame=single }
-\lstinputlisting{../main.c}
+\lstinputlisting{./main.c}
 
 
 
