@@ -1,1 +1,0 @@
-Aca tienen que ir las imagenes de los cuadros y los graficos para al final del archivo de TEX, con el título, poner la referencia y después generar el documento.

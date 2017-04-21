@@ -1,7 +1,0 @@
-\contentsline {figure}{\numberline {1}{\ignorespaces Tabla de los tiempos del algoritmo de ordenamiento bubblesort}}{6}{figure.1}
-\contentsline {figure}{\numberline {2}{\ignorespaces Tabla de los tiempos del algoritmo de ordenamiento quicksort}}{6}{figure.2}
-\contentsline {figure}{\numberline {3}{\ignorespaces Gr\'afico comparando la cantidad de swaps de los sorts corridos en Linux}}{6}{figure.3}
-\contentsline {figure}{\numberline {4}{\ignorespaces Gr\'afico comparando la cantidad de compare de los sorts corridos en Linux}}{7}{figure.4}
-\contentsline {figure}{\numberline {5}{\ignorespaces Gr\'afico comparando la cantidad de tiempo de los sorts corridos en Linux por palabras del documento}}{8}{figure.5}
-\contentsline {figure}{\numberline {6}{\ignorespaces Tabla de los speedups obtenidos de los sorts}}{9}{figure.6}
-\contentsline {figure}{\numberline {7}{\ignorespaces Gr\'afico del speedup entre Bubblsort en C y Quicksort en C}}{9}{figure.7}
