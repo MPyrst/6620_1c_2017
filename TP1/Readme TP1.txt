@@ -26,3 +26,13 @@ ctrl+shift+E
 ctrl+shift+C (problemas por el trap de ctrl+c, termina el programa).
 ctrl+shift+B
 ctrl+shift+A
+
+Stack 3
+Hexa	01 02 00 05
+echo -ne '00000000000000000000000000000000000000000000000000000000000000000000000000000000\x05\x00\x02\x01' | ./a.out
+
+Stack 4
+Hexa 	00 0d 0a 00
+
+
+
