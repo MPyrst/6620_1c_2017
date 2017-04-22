@@ -48,6 +48,49 @@ Nota 2: Se imprimen 96 caracteres para llegar hasta el $ra de la función stack4
 
 
 
+$LC2:
+        .ascii  "you win!\n\000"
+        .text
+        .align  2
+        .globl  stack4
+        .ent    stack4
+	la      $a0,$LC2
+	la      $t9,printf
+
+
+
+
+
+
+
+.file   1 "stack4.c"
+        .section .mdebug.abi32
+        .previous
+        .abicalls
+        .text
+        .align  2
+        .globl  main
+        .ent    main
+main:
+        .frame  $fp,40,$ra              # vars= 0, regs= 3/0, args= 16, extra= 8
+        .mask   0xd0000000,-8
+        .fmask  0x00000000,0
+        .set    noreorder
+        .cpload $t9
+        .set    reorder
+               la      $a0,$LC2
+        la      $t9,printf
+        jal     $ra,$t9
+        j       $ra
+        .end    main
+        .size   main, .-main
+        .rdata       
+        .align  2
+$LC2:
+        .ascii  "you win!\n\000"
+        .text
+        .ident  "GCC: (GNU) 3.3.3 (NetBSD nb3 20040520)"
+
 
 
 
