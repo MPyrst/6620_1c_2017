@@ -8,9 +8,15 @@
 #include <string>
 #include <iostream>
 #include <defines.h>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <regex>
+#include <boost/algorithm/string/classification.hpp>
+#include <boost/algorithm/string/split.hpp>
 
 using namespace std;
 
-void parseDataMissRate(/*parser_output, string, string*/);
+bool parseDataMissRate(parser_output, string);
 
 #endif //PARSER_H

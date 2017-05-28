@@ -4,8 +4,7 @@
 
 int main(int argc, char *argv[]) {
     parser_output blockSizeOutput;
-
-    string fede = "ff";
-    string fede2 = "11";
-    parseDataMissRate(/*blockSizeOutput, fede, fede2*/);
+    parseDataMissRate(blockSizeOutput, "blockSize");
 }
+
+

@@ -3,3 +3,4 @@ set(SOURCE_FILES
         parser.cpp)
 
 add_executable(tp2 ${SOURCE_FILES})
+

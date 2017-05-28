@@ -1,4 +1,4 @@
-#include "parser.h"
+#include <parser.h>
 
 /* CacheGrind with cg_annotate example
  * Example from https://accu.org/index.php/journals/1886
@@ -30,11 +30,52 @@ Auto-annotation:  off
 152,610    50,041 1,862    11  /build/glibc-GKVZIf/glibc-2.23/elf/dl-lookup.c:_dl_lookup_symbol_x*/
 
 
-void parseDataMissRate(/*parser_output parserOutput, string moduleName, string inputFile*/) {
-    //grep $(moduleName) $(inputFile) > auxOutputFile
-    /*string grepCall("grep");
-    grepCall.append(" ");
+long dr;
+long dw;
+long d1mr;
+long d1mw;
+
+string do_replace(string const &in, string const &from, string const &to) {
+    return std::regex_replace(in, std::regex(from), to);
+}
+
+
+bool parseDataMissRate(parser_output parserOutput, string moduleName) {
+    //grep $(moduleName) $(moduleName)Cg > $(moduleName)Output
+    string outputFile = moduleName.append("Output");
+    string inputFile = moduleName.append("Cg");
+
+    string grepCall("grep ");
     grepCall.append(moduleName).append(" ");
-    grepCall.append("auxOutputFile");
-    system(grepCall.c_str());*/
+    grepCall.append(inputFile);
+
+    grepCall.append(">").append(outputFile);
+    system(grepCall.c_str());
+
+    ifstream t(outputFile);
+    stringstream buffer;
+    buffer << t.rdbuf();
+
+    if (!t.good()) {
+        //TODO error handling
+        return false;
+    }
+
+    char splitChar = ' ';
+
+    istringstream split(buffer.str());
+    vector<string> tokens;
+    for (string each; getline(split, each, splitChar); tokens.push_back(each));
+
+    string drString = do_replace(tokens[0], " ", "");
+    string dwString = do_replace(tokens[1], " ", "");
+    string d1mrString = do_replace(tokens[2], " ", "");
+    string d1mwString = do_replace(tokens[3], " ", "");
+
+    parserOutput.dr = stol(drString);
+    parserOutput.dw = stol(dwString);
+    parserOutput.d1mr = stol(d1mrString);
+    parserOutput.d1mw = stol(d1mwString);
+
+    return true;
 }
