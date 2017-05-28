@@ -4,7 +4,7 @@
 #include <moduleExecutor.h>
 
 int main(int argc, char *argv[]) {
-    //TODO parse --D1=<size>,<associativity>,<line size>
+    //TODO @agus parsear --D1=<size>,<associativity>,<line size> y fijarse que sean números válidos.
     string simulatedCacheInfo = "";
 
 
