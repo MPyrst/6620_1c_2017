@@ -1,4 +1,4 @@
-#include <parser.h>
+#include "parser.h"
 
 /* CacheGrind with cg_annotate example
  * Example from https://accu.org/index.php/journals/1886
@@ -29,28 +29,21 @@ Auto-annotation:  off
 3,078,503 1,000,003     0     0  /home/federicofarina/Workspace/6620_1c_2017/TP2/main.cpp:main
 152,610    50,041 1,862    11  /build/glibc-GKVZIf/glibc-2.23/elf/dl-lookup.c:_dl_lookup_symbol_x*/
 
-
-long dr;
-long dw;
-long d1mr;
-long d1mw;
-
 string do_replace(string const &in, string const &from, string const &to) {
     return std::regex_replace(in, std::regex(from), to);
 }
 
-
-bool parseDataMissRate(parser_output parserOutput, string moduleName) {
-    //grep $(moduleName) $(moduleName)Cg > $(moduleName)Output
-    string outputFile = moduleName.append("Output");
-    string inputFile = moduleName.append("Cg");
+bool parseDataMissRate(parser_output *parserOutput, string &moduleName) {
+    //grep $(moduleName)( $(moduleName)Cg > $(moduleName)Output
+    string outputFile = moduleName + "Output";
+    string inputFile = moduleName + ".readable";
 
     string grepCall("grep ");
-    grepCall.append(moduleName).append(" ");
+    grepCall.append("\"").append(moduleName).append("(\" ");
     grepCall.append(inputFile);
-
     grepCall.append(">").append(outputFile);
     system(grepCall.c_str());
+
 
     ifstream t(outputFile);
     stringstream buffer;
@@ -61,21 +54,32 @@ bool parseDataMissRate(parser_output parserOutput, string moduleName) {
         return false;
     }
 
-    char splitChar = ' ';
+    //4,194,307 1,048,580     1 16,385  /home/federicofarina/Workspace/6620_1c_2017/TP2/modules/blockSize/main.cpp:blockSize(char*)
+    string info = buffer.str();
+    //cout << "Info:" << buffer.str() << endl;
 
-    istringstream split(buffer.str());
+    char line[info.size() + 1];
+    std::copy(info.begin(), info.end(), line);
+    line[info.size()] = '\0';
+
     vector<string> tokens;
-    for (string each; getline(split, each, splitChar); tokens.push_back(each));
+    unsigned int pos = 0;
+    char *token = strtok(line, " \r\n");
+    while (token != NULL && pos < SHOW_INFO_QUANTITY) {
+        tokens.push_back(token);
+        token = strtok(NULL, " \r\n");
+        pos++;
+    }
 
-    string drString = do_replace(tokens[0], " ", "");
-    string dwString = do_replace(tokens[1], " ", "");
-    string d1mrString = do_replace(tokens[2], " ", "");
-    string d1mwString = do_replace(tokens[3], " ", "");
+    parserOutput->dr = stoul(do_replace(tokens[0], ",", ""));
+    parserOutput->dw = stoul(do_replace(tokens[1], ",", ""));;
+    parserOutput->d1mr = stoul(do_replace(tokens[2], ",", ""));;
+    parserOutput->d1mw = stoul(do_replace(tokens[3], ",", ""));
 
-    parserOutput.dr = stol(drString);
-    parserOutput.dw = stol(dwString);
-    parserOutput.d1mr = stol(d1mrString);
-    parserOutput.d1mw = stol(d1mwString);
+    /*cout << "dr:" << parserOutput->dr << endl;
+    cout << "dw:" << parserOutput->dw << endl;
+    cout << "d1mr:" << parserOutput->d1mr << endl;
+    cout << "d1mw:" << parserOutput->d1mw << endl;*/
 
     return true;
 }
