@@ -12,8 +12,6 @@
 #include <fstream>
 #include <sstream>
 #include <regex>
-#include <boost/algorithm/string/classification.hpp>
-#include <boost/algorithm/string/split.hpp>
 
 using namespace std;
 
