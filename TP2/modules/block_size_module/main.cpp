@@ -3,8 +3,7 @@
 #define ITERATION_SIZE 1024*1024
 
 void blockSize(char *array) {
-    unsigned long pos = 0;
-    for (pos = 0; pos < ITERATION_SIZE; pos++) {
+    for (unsigned long pos = 0; pos < ITERATION_SIZE; pos++) {
         array[pos] = 'a';
     }
 }

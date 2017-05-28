@@ -15,7 +15,6 @@ int main(int argc, char *argv[]) {
 
     unsigned long blockSize = blockSizeOutput.dw / blockSizeOutput.d1mw;
     std::cout << "Tamaño de bloque: " << blockSize << " Bytes" << std::endl;
-
 }
 
 
