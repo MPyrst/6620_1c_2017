@@ -15,6 +15,9 @@ set(SOURCE_FILES
 
 add_executable(tp2 ${SOURCE_FILES})
 
-include_directories(modules/block_size_module)
-add_subdirectory(modules/block_size_module)
+include_directories(modules/blockSize)
+add_subdirectory(modules/blockSize)
+
+include_directories(modules/cacheSize)
+add_subdirectory(modules/cacheSize)
 

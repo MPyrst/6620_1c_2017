@@ -5,8 +5,7 @@ static const int SHOW_INFO_QUANTITY = 4;
 
 #include <string>
 #include <iostream>
-#include "defines.h"
-#include <iostream>
+#include <defines.h>
 #include <fstream>
 #include <sstream>
 #include <regex>

@@ -34,16 +34,17 @@ string do_replace(string const &in, string const &from, string const &to) {
 }
 
 bool parseDataMissRate(parser_output *parserOutput, string &moduleName) {
-    //grep $(moduleName)( $(moduleName)Cg > $(moduleName)Output
-    string outputFile = moduleName + "Output";
+    //grep :$(moduleName) $(moduleName).readable > $(moduleName).grepOut
+    string outputFile = moduleName + ".grepOut";
     string inputFile = moduleName + ".readable";
 
     string grepCall("grep ");
-    grepCall.append("\"").append(moduleName).append("(\" ");
+    grepCall.append("\":").append(moduleName).append("\" ");
     grepCall.append(inputFile);
-    grepCall.append(">").append(outputFile);
+    grepCall.append(" > ").append(outputFile);
     system(grepCall.c_str());
 
+    //cout << "Grep: " << grepCall << endl;
 
     ifstream t(outputFile);
     stringstream buffer;
@@ -54,7 +55,7 @@ bool parseDataMissRate(parser_output *parserOutput, string &moduleName) {
         return false;
     }
 
-    //4,194,307 1,048,580     1 16,385  /home/federicofarina/Workspace/6620_1c_2017/TP2/modules/blockSize/main.cpp:blockSize(char*)
+    //Example: 4,194,307 1,048,580     1 16,385  /home/federicofarina/Workspace/6620_1c_2017/TP2/modules/blockSize/main.cpp:blockSize(char*)
     string info = buffer.str();
     //cout << "Info:" << buffer.str() << endl;
 
@@ -76,10 +77,10 @@ bool parseDataMissRate(parser_output *parserOutput, string &moduleName) {
     parserOutput->d1mr = stoul(do_replace(tokens[2], ",", ""));;
     parserOutput->d1mw = stoul(do_replace(tokens[3], ",", ""));
 
-    /*cout << "dr:" << parserOutput->dr << endl;
-    cout << "dw:" << parserOutput->dw << endl;
-    cout << "d1mr:" << parserOutput->d1mr << endl;
-    cout << "d1mw:" << parserOutput->d1mw << endl;*/
+    /* cout << "dr:" << parserOutput->dr << endl;
+     cout << "dw:" << parserOutput->dw << endl;
+     cout << "d1mr:" << parserOutput->d1mr << endl;
+     cout << "d1mw:" << parserOutput->d1mw << endl;*/
 
     return true;
 }
