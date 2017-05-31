@@ -32,8 +32,24 @@ int main(int argc, char *argv[]) {
         blockSizeParams.clear();
     }
 
-    cout << "Tamaño Total: " << n / 2 * blockSize << " Bytes" << endl;
+    unsigned long cacheSize = n / 2 * blockSize;
+    cout << "Tamaño Total: " << cacheSize << " Bytes" << endl;
 
+    //TODO terminar
+/*    moduleName = "cacheAssociativity";
+    string cacheAssociativityParams;
+    parser_output associativityOutput;
+    n = 1;
+    while (associativityOutput.d1mw == 0) {
+        cacheAssociativityParams.append(to_string(blockSize)).append(" ")
+        .append(to_string(cacheSize)).append(" ").append(to_string(n));
+        executeModule(moduleName, simulatedCacheInfo, blockSizeParams);
+        parseDataMissRate(&associativityOutput, moduleName);
+        n = n * 2;
+    }
+    cout << "#Vias: " << n / 2 << endl;*/
+
+    return EXIT_SUCCESS;
 }
 
 

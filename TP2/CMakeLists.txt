@@ -21,3 +21,5 @@ add_subdirectory(modules/blockSize)
 include_directories(modules/cacheSize)
 add_subdirectory(modules/cacheSize)
 
+#[[include_directories(modules/cacheAssociativity)
+add_subdirectory(modules/cacheAssociativity)]]
