@@ -8,7 +8,8 @@ bool validateCacheInfo(string data);
 
 int main(int argc, char *argv[]) {
     int parameter;
-    string cache = "";
+    string values = "";
+    string simulatedCacheInfo = "";
 
     static struct option long_options[] =
     {
@@ -37,7 +38,7 @@ int main(int argc, char *argv[]) {
                        );
                 exit(EXIT_FAILURE);
             case 'l':
-                cache = optarg;
+                values = optarg;
                 break;
             case '?':
                 if (optopt == 'l') {
@@ -53,14 +54,15 @@ int main(int argc, char *argv[]) {
                 exit(EXIT_FAILURE);
         }
 
+    simulatedCacheInfo.append(values);
     /* cache value */
     int size, ways, bytesPerLine;
     bool validInfo;
-    if (cache.size() > 0) {
+    if (values.size() > 0) {
         string aux = "";
-	int pos = cache.find(',');
+	int pos = values.find(',');
 	if (pos != -1) {
-	    aux = cache.substr(0, pos);
+	    aux = values.substr(0, pos);
 	    validInfo = validateCacheInfo(aux);
 	    if (!validInfo) {
 		fprintf(stderr, "The size info is not valid.\n");
@@ -68,10 +70,10 @@ int main(int argc, char *argv[]) {
 	    }
 	    size = stoi(aux);
 	    aux.clear();
-	    cache = cache.substr(pos + 1);
-	    pos = cache.find(',');
+	    values = values.substr(pos + 1);
+	    pos = values.find(',');
             if (pos != -1) {
-	    	aux = cache.substr(0, pos);
+	    	aux = values.substr(0, pos);
 	    	validInfo = validateCacheInfo(aux);
 	    	if (!validInfo) {
 			fprintf(stderr, "The ways info is not valid.\n");
@@ -79,7 +81,7 @@ int main(int argc, char *argv[]) {
 	    	}
 	    	ways = stoi(aux);;
 	    	aux.clear();
-           	aux = cache.substr(pos + 1);
+           	aux = values.substr(pos + 1);
 	    	validInfo = validateCacheInfo(aux);
 	    	if (!validInfo) {
 			fprintf(stderr, "The bytes per line info is not valid.\n");
@@ -92,10 +94,6 @@ int main(int argc, char *argv[]) {
 	   exit(EXIT_FAILURE);
         }
     }
-
-
-    string simulatedCacheInfo = "";
-
 
     string moduleName = "blockSize";
     parser_output blockSizeOutput;
@@ -143,8 +141,10 @@ int main(int argc, char *argv[]) {
 
 bool validateCacheInfo(string data) {
     int aux = stoi(data);
-    if (aux == 1 || (aux % 2 == 0)) {
-       return true;
+    if ( aux > 0) {
+	if (aux == 1 || ((aux & (aux -1)) == 0)) {
+       	    return true;
+	}
     }
     return false;
 }
