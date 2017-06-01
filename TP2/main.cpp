@@ -7,7 +7,6 @@
 bool validateCacheInfo(string data);
 
 int main(int argc, char *argv[]) {
-    //TODO @agus parsear --D1=<size>,<associativity>,<line size> y fijarse que sean números válidos.
     int parameter;
     string cache = "";
 
