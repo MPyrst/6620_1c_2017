@@ -28,13 +28,13 @@ int main(int argc, char *argv[]) {
                                     long_options, &option_index)) != -1)
         switch (parameter) {
             case 'v':
-                printf("This is version 1.0 from tp3: Memorias caches.\n");
+                printf("This is version 1.0 from tp2: Memorias cache.\n");
                 exit(EXIT_FAILURE);
             case 'h':
                 printf("Usage:\n"
-                       " tp0 -h\n"
-                       " tp0 -v\n"
-                       " tp0 -D1=size, ways, bytes per line\n"
+                       " tp2 -h\n"
+                       " tp2 -v\n"
+                       " tp2 -D1=size, ways, bytes per line\n"
                        );
                 exit(EXIT_FAILURE);
             case 'l':
