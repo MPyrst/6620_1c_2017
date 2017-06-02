@@ -10,6 +10,6 @@
 
 using namespace std;
 
-void executeModule(std::string, string, string);
+void executeModule(std::string &, string &, string &);
 
 #endif //MODULE_EXECUTOR_H

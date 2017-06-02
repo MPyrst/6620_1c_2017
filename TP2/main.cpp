@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
      We distinguish them by their indices. */
     {"version", no_argument,       0, 'v'},
     {"help",    no_argument,       0, 'h'},
-    {"D1=",  required_argument, 0, 'l'},
+    {"D1=",     required_argument, 0, 'l'},
     {0, 0,                         0, 0}
     };
 
@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
     int option_index = 0;
 
     while ((parameter = getopt_long_only(argc, argv, "vhl:",
-                                    long_options, &option_index)) != -1)
+                                         long_options, &option_index)) != -1)
         switch (parameter) {
             case 'v':
                 printf("This is version 1.0 from tp2: Memorias cache.\n");
@@ -35,7 +35,7 @@ int main(int argc, char *argv[]) {
                        " tp2 -h\n"
                        " tp2 -v\n"
                        " tp2 -D1=size, ways, bytes per line\n"
-                       );
+                );
                 exit(EXIT_FAILURE);
             case 'l':
                 values = optarg;
@@ -43,56 +43,59 @@ int main(int argc, char *argv[]) {
             case '?':
                 if (optopt == 'l') {
                     fprintf(stderr, "Option -%c requires an argument.\n", optopt);
-                } else if (isprint (optopt)) {
+                } else if (isprint(optopt)) {
                     fprintf(stderr, "Unknown argument '-%c'.\n", optopt);
                 } else {
                     fprintf(stderr, "Unknown option character '\\x%x'.\n", optopt);
-
                 }
                 exit(EXIT_FAILURE);
             default:
                 exit(EXIT_FAILURE);
         }
 
-    simulatedCacheInfo.append(values);
-    /* cache value */
-    int size, ways, bytesPerLine;
+
     bool validInfo;
-    if (values.size() > 0) {
+    string toCheckValues = values;
+    if (toCheckValues.size() > 0) {
         string aux = "";
-	int pos = values.find(',');
-	if (pos != -1) {
-	    aux = values.substr(0, pos);
-	    validInfo = validateCacheInfo(aux);
-	    if (!validInfo) {
-		fprintf(stderr, "The size info is not valid.\n");
-		exit(EXIT_FAILURE);
-	    }
-	    size = stoi(aux);
-	    aux.clear();
-	    values = values.substr(pos + 1);
-	    pos = values.find(',');
-            if (pos != -1) {
-	    	aux = values.substr(0, pos);
-	    	validInfo = validateCacheInfo(aux);
-	    	if (!validInfo) {
-			fprintf(stderr, "The ways info is not valid.\n");
-			exit(EXIT_FAILURE);
-	    	}
-	    	ways = stoi(aux);;
-	    	aux.clear();
-           	aux = values.substr(pos + 1);
-	    	validInfo = validateCacheInfo(aux);
-	    	if (!validInfo) {
-			fprintf(stderr, "The bytes per line info is not valid.\n");
-			exit(EXIT_FAILURE);
-	    	}
-	    	bytesPerLine = stoi(aux);  
-	    }	
+        size_t pos = toCheckValues.find(',');
+        if (pos != std::string::npos) {
+            aux = toCheckValues.substr(0, pos);
+            validInfo = validateCacheInfo(aux);
+            if (!validInfo) {
+                fprintf(stderr, "The size info is not valid.\n");
+                exit(EXIT_FAILURE);
+            }
+            aux.clear();
+            toCheckValues = toCheckValues.substr(pos + 1);
+            pos = toCheckValues.find(',');
+            if (pos != std::string::npos) {
+                aux = toCheckValues.substr(0, pos);
+                validInfo = validateCacheInfo(aux);
+                if (!validInfo) {
+                    fprintf(stderr, "The ways info is not valid.\n");
+                    exit(EXIT_FAILURE);
+                }
+                aux.clear();
+                aux = toCheckValues.substr(pos + 1);
+                validInfo = validateCacheInfo(aux);
+                if (!validInfo) {
+                    fprintf(stderr, "The bytes per line info is not valid.\n");
+                    exit(EXIT_FAILURE);
+                }
+            } else {
+                fprintf(stderr, "The info of the cache is not valid.\n");
+                exit(EXIT_FAILURE);
+            }
         } else {
-	   fprintf(stderr, "The info of the cache is not valid.\n");
-	   exit(EXIT_FAILURE);
+            fprintf(stderr, "The info of the cache is not valid.\n");
+            exit(EXIT_FAILURE);
         }
+    }
+
+
+    if (!values.empty()) {
+        simulatedCacheInfo.append("--D1=").append(values);
     }
 
     string moduleName = "blockSize";
@@ -107,7 +110,7 @@ int main(int argc, char *argv[]) {
 
     moduleName = "cacheSize";
     string blockSizeParams;
-    unsigned int n = 64;
+    unsigned int n = 128;
     parser_output cacheSizeOutput;
     cacheSizeOutput.d1mw = 0;
 
@@ -119,7 +122,7 @@ int main(int argc, char *argv[]) {
         blockSizeParams.clear();
     }
 
-    unsigned long cacheSize = n / 2 * blockSize;
+    unsigned long cacheSize = (n / 2) * blockSize;
     cout << "Tamaño Total: " << cacheSize << " Bytes" << endl;
 
     //TODO terminar
@@ -141,10 +144,10 @@ int main(int argc, char *argv[]) {
 
 bool validateCacheInfo(string data) {
     int aux = stoi(data);
-    if ( aux > 0) {
-	if (aux == 1 || ((aux & (aux -1)) == 0)) {
-       	    return true;
-	}
+    if (aux > 0) {
+        if (aux == 1 || ((aux & (aux - 1)) == 0)) {
+            return true;
+        }
     }
     return false;
 }

@@ -1,6 +1,6 @@
 #include "moduleExecutor.h"
 
-void executeModule(string moduleName, string simulatedCacheInfo, string params) {
+void executeModule(string &moduleName, string &simulatedCacheInfo, string &params) {
     string logFile = moduleName + ".log";
     string outputFile = moduleName + ".out";
     string readableOutput = moduleName + ".readable";
@@ -10,7 +10,7 @@ void executeModule(string moduleName, string simulatedCacheInfo, string params) 
     cacheGrindCall.append(logFile);
     cacheGrindCall.append(" --cachegrind-out-file=").append(outputFile);
     if (!simulatedCacheInfo.empty()) {
-        cacheGrindCall.append(simulatedCacheInfo);
+        cacheGrindCall.append(" ").append(simulatedCacheInfo);
     }
     cacheGrindCall.append(" ./modules/").append(moduleName).append("/").append(moduleName);
     if (!params.empty()) {
