@@ -1,0 +1,18 @@
+Intro
+Los modulos son herramientas de benchmarking, la idea es estudiar y estimar los siguientes parámetros de lac ache y frutear, hablar de cacheGrind.
+Cache grind es una herramienta de profiling y permite simular distintas caches y darnos info sobre las referenciasy los misses...
+
+Tamaño del bloque
+
+Realizo un lazo escribiendo 1MB, que sabemos que es mucho mayor que el tamaño de la cache L1 de datos de manera
+que voy a acceder a todas las lineas de la cache.
+Como accedí a todas las lineas y solo tengo miss la primera vez que accedo a cada linea (luego solo hits) puedo calcular el tamaño de la linea
+con la división de la cantidad de veces que accedi (dw) y la cantidad de misses que tuve (d1mw).
+
+
+Tamaño de la cache
+
+Uso como parámetro el tamaño del bloque que obtuve del anterior módulo de benchmarking. Con ese valor lo que hacemos es estimar una cantidad inicial de bloques
+y escribimos esa cantidad de bloques en la cache, empezamos con un N tentativo y si con ese N tenemos n cantidad de misses es que todavia quedaron bloques sin escribir. Si para esto
+vamos aumentando el valor de N y cuando tenemos menor cantidad de misses que ese N lo que quiere decir es que ya estamso danto hits con bloques que ya están escritos
+por lo que el tamaño de la cache será n/2.
