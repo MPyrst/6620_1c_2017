@@ -103,27 +103,29 @@ int main(int argc, char *argv[]) {
     string params = "";
     executeModule(moduleName, simulatedCacheInfo, params);
     parseDataMissRate(&blockSizeOutput, moduleName);
+    cout << " dr: " << blockSizeOutput.dr << " Misses: " << blockSizeOutput.d1mr << endl;
 
-    unsigned long blockSize = blockSizeOutput.dw / blockSizeOutput.d1mw;
+    unsigned long blockSize = blockSizeOutput.dr / blockSizeOutput.d1mr;
     cout << "Tamaño de Bloque: " << blockSize << " Bytes" << endl;
 
 
     moduleName = "cacheSize";
-    string blockSizeParams;
+    params = "";
     unsigned int n = 128;
     parser_output cacheSizeOutput;
-    cacheSizeOutput.d1mw = 0;
+    cacheSizeOutput.d1mr = 0;
 
-    while (cacheSizeOutput.d1mw <= n) {
+    while (cacheSizeOutput.d1mr <= n) {
         n *= 2;
-        blockSizeParams.append(to_string(blockSize)).append(" ").append(to_string(n));
-        executeModule(moduleName, simulatedCacheInfo, blockSizeParams);
+        params.append(to_string(blockSize)).append(" ").append(to_string(n));
+        executeModule(moduleName, simulatedCacheInfo, params);
         parseDataMissRate(&cacheSizeOutput, moduleName);
-        blockSizeParams.clear();
+        params.clear();
     }
 
     unsigned long cacheSize = (n / 2) * blockSize;
     cout << "Tamaño Total: " << cacheSize << " Bytes" << endl;
+
 
     //TODO terminar
 /*    moduleName = "cacheAssociativity";
@@ -133,7 +135,7 @@ int main(int argc, char *argv[]) {
     while (associativityOutput.d1mw == 0) {
         cacheAssociativityParams.append(to_string(blockSize)).append(" ")
         .append(to_string(cacheSize)).append(" ").append(to_string(n));
-        executeModule(moduleName, simulatedCacheInfo, blockSizeParams);
+        executeModule(moduleName, simulatedCacheInfo, cacheSizeParams);
         parseDataMissRate(&associativityOutput, moduleName);
         n = n * 2;
     }

@@ -21,7 +21,7 @@ void executeModule(string &moduleName, string &simulatedCacheInfo, string &param
     system(cacheGrindCall.c_str());
 
     //cg_annotate --auto=yes --show=Dr,Dw,D1mr,D1mw $(outputFile)
-    string cg_annotateCall("cg_annotate --auto=yes --show=Dr,Dw,D1mr,D1mw ");
+    string cg_annotateCall("cg_annotate --auto=yes --threshold=0.0001 --show=Dr,Dw,D1mr,D1mw ");
     cg_annotateCall.append(outputFile).append(">").append(readableOutput);
     system(cg_annotateCall.c_str());
 }

@@ -44,8 +44,6 @@ bool parseDataMissRate(parser_output *parserOutput, string &moduleName) {
     grepCall.append(" > ").append(outputFile);
     system(grepCall.c_str());
 
-    //cout << "Grep: " << grepCall << endl;
-
     ifstream t(outputFile);
     stringstream buffer;
     buffer << t.rdbuf();
@@ -57,7 +55,6 @@ bool parseDataMissRate(parser_output *parserOutput, string &moduleName) {
 
     //Example: 4,194,307 1,048,580     1 16,385  /home/federicofarina/Workspace/6620_1c_2017/TP2/modules/blockSize/main.cpp:blockSize(char*)
     string info = buffer.str();
-    //cout << "Info:" << buffer.str() << endl;
 
     char line[info.size() + 1];
     std::copy(info.begin(), info.end(), line);
@@ -77,10 +74,10 @@ bool parseDataMissRate(parser_output *parserOutput, string &moduleName) {
     parserOutput->d1mr = stoul(do_replace(tokens[2], ",", ""));;
     parserOutput->d1mw = stoul(do_replace(tokens[3], ",", ""));
 
-    /* cout << "dr:" << parserOutput->dr << endl;
-     cout << "dw:" << parserOutput->dw << endl;
-     cout << "d1mr:" << parserOutput->d1mr << endl;
-     cout << "d1mw:" << parserOutput->d1mw << endl;*/
+/*    cout << "dr:" << parserOutput->dr << endl;
+    cout << "dw:" << parserOutput->dw << endl;
+    cout << "d1mr:" << parserOutput->d1mr << endl;
+    cout << "d1mw:" << parserOutput->d1mw << endl;*/
 
     return true;
 }
