@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
     register unsigned int i = 0;
     char **array = new char *[n];
     for (i = 0; i < n; i++) {
-        array[i] = new char[cacheSize];
+        array[i] = new char[cacheSize / n];
     }
 
     register unsigned int iterations = 0;
@@ -36,6 +36,7 @@ int main(int argc, char *argv[]) {
         for (i = 0; i < blocksQuantity; i++) {//blocks along same way
             for (j = 0; j < n; j++) {//#n ways
                 array[j][i * blockSize] = 'F';
+                //cout << "Pos:" << array + j + i * blockSize << endl;
             }
         }
     }
