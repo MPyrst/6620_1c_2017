@@ -56,6 +56,7 @@ int main(int argc, char *argv[]) {
 
     bool validInfo;
     string toCheckValues = values;
+
     if (toCheckValues.size() > 0) {
         string aux = "";
         size_t pos = toCheckValues.find(',');
@@ -93,7 +94,6 @@ int main(int argc, char *argv[]) {
         }
     }
 
-
     if (!values.empty()) {
         simulatedCacheInfo.append("--D1=").append(values);
     }
@@ -103,44 +103,47 @@ int main(int argc, char *argv[]) {
     string params = "";
     executeModule(moduleName, simulatedCacheInfo, params);
     parseDataMissRate(&blockSizeOutput, moduleName);
-    cout << " dr: " << blockSizeOutput.dr << " Misses: " << blockSizeOutput.d1mr << endl;
 
-    unsigned long blockSize = blockSizeOutput.dr / blockSizeOutput.d1mr;
+    unsigned long blockSize = (blockSizeOutput.dr / 2) / blockSizeOutput.d1mr + 1;
     cout << "Tamaño de Bloque: " << blockSize << " Bytes" << endl;
-
 
     moduleName = "cacheSize";
     params = "";
     unsigned int n = 128;
     parser_output cacheSizeOutput;
-    cacheSizeOutput.d1mr = 0;
+    cacheSizeOutput.d1mw = 0;
 
-    while (cacheSizeOutput.d1mr <= n) {
-        n *= 2;
+    while (cacheSizeOutput.d1mw <= n) {
         params.append(to_string(blockSize)).append(" ").append(to_string(n));
         executeModule(moduleName, simulatedCacheInfo, params);
         parseDataMissRate(&cacheSizeOutput, moduleName);
         params.clear();
+        if (n >= cacheSizeOutput.d1mw) {
+            n *= 2;
+        }
     }
 
-    unsigned long cacheSize = (n / 2) * blockSize;
+    unsigned long cacheSize = n * blockSize;
     cout << "Tamaño Total: " << cacheSize << " Bytes" << endl;
 
 
-    //TODO terminar
-/*    moduleName = "cacheAssociativity";
+    moduleName = "cacheAssociativity";
     string cacheAssociativityParams;
     parser_output associativityOutput;
+    associativityOutput.d1mw = 0;
     n = 1;
     while (associativityOutput.d1mw == 0) {
         cacheAssociativityParams.append(to_string(blockSize)).append(" ")
         .append(to_string(cacheSize)).append(" ").append(to_string(n));
-        executeModule(moduleName, simulatedCacheInfo, cacheSizeParams);
+        executeModule(moduleName, simulatedCacheInfo, cacheAssociativityParams);
         parseDataMissRate(&associativityOutput, moduleName);
-        n = n * 2;
+        cacheAssociativityParams.clear();
+        if (associativityOutput.d1mw == 0) {
+            n = n * 2;
+        }
     }
-    cout << "#Vias: " << n / 2 << endl;*/
 
+    cout << "#Vias: " << n / 2 << endl;
     return EXIT_SUCCESS;
 }
 

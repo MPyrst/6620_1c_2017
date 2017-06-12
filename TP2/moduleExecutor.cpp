@@ -10,10 +10,12 @@ void executeModule(string &moduleName, string &simulatedCacheInfo, string &param
     cacheGrindCall.append(logFile);
     cacheGrindCall.append(" --cachegrind-out-file=").append(outputFile);
     if (!simulatedCacheInfo.empty()) {
+        //cout << "Params: " << simulatedCacheInfo << endl;
         cacheGrindCall.append(" ").append(simulatedCacheInfo);
     }
     cacheGrindCall.append(" ./modules/").append(moduleName).append("/").append(moduleName);
     if (!params.empty()) {
+        //cout << "Params: " << params << endl;
         cacheGrindCall.append(" ").append(params);
     }
 
@@ -21,7 +23,7 @@ void executeModule(string &moduleName, string &simulatedCacheInfo, string &param
     system(cacheGrindCall.c_str());
 
     //cg_annotate --auto=yes --show=Dr,Dw,D1mr,D1mw $(outputFile)
-    string cg_annotateCall("cg_annotate --auto=yes --threshold=0.0001 --show=Dr,Dw,D1mr,D1mw ");
+    string cg_annotateCall("cg_annotate --auto=yes --threshold=0.000001 --show=Dr,Dw,D1mr,D1mw ");
     cg_annotateCall.append(outputFile).append(">").append(readableOutput);
     system(cg_annotateCall.c_str());
 }

@@ -5,23 +5,12 @@
 #include <regex>
 
 using namespace std;
-//TODO terminar
-/*void cacheAssociativity(register unsigned int blockSize, register unsigned int cacheSize, register unsigned int n,
-                        char array[n][cacheSize]) {
 
+void cacheAssociativity(register unsigned int n,
+                        char *array) {
     register unsigned int j = 0;
-    register unsigned int i = 0;
-
-    register unsigned int blocksQuantity = cacheSize / blockSize / n;
-
-    for (j = 0; j < n; j++) {//associativity
-        for (i = 0; i < blocksQuantity; i++) {//blocks along same way
-            array[j][i * blockSize] = 'F';
-        }
-    }
-
     for (j = 0; j < n; j++) {
-        array[j][0] = 'E';
+        *(array + j * n) = 'E';
     }
 }
 
@@ -31,9 +20,34 @@ int main(int argc, char *argv[]) {
     unsigned int cacheSize = (unsigned int) std::stoul(argv[2]);
     unsigned int n = (unsigned int) std::stoul(argv[3]);
 
-    char array[n][cacheSize];
 
-    cacheAssociativity(blockSize, cacheSize, n, array);
+    register unsigned int i = 0;
+    char **array = new char *[n];
+    for (i = 0; i < n; i++) {
+        array[i] = new char[cacheSize];
+    }
+
+    register unsigned int iterations = 0;
+    register unsigned int blocksQuantity = cacheSize / blockSize / n;
+
+    register unsigned int j = 0;
+
+    for (iterations = 0; iterations < 100; iterations++) {
+        for (i = 0; i < blocksQuantity; i++) {//blocks along same way
+            for (j = 0; j < n; j++) {//#n ways
+                array[j][i * blockSize] = 'F';
+            }
+        }
+    }
+
+    cacheAssociativity(n, *array);
+
+    for (i = 0; i < n; i++) {
+        delete array[i];
+    }
+
+    delete[]array;
+
     return EXIT_SUCCESS;
-}*/
+}
 

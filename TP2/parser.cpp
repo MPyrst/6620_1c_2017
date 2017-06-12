@@ -74,10 +74,10 @@ bool parseDataMissRate(parser_output *parserOutput, string &moduleName) {
     parserOutput->d1mr = stoul(do_replace(tokens[2], ",", ""));;
     parserOutput->d1mw = stoul(do_replace(tokens[3], ",", ""));
 
-/*    cout << "dr:" << parserOutput->dr << endl;
-    cout << "dw:" << parserOutput->dw << endl;
-    cout << "d1mr:" << parserOutput->d1mr << endl;
-    cout << "d1mw:" << parserOutput->d1mw << endl;*/
+    /*   cout << "dr:" << parserOutput->dr << endl;
+       cout << "dw:" << parserOutput->dw << endl;
+       cout << "d1mr:" << parserOutput->d1mr << endl;
+       cout << "d1mw:" << parserOutput->d1mw << endl;*/
 
     return true;
 }
