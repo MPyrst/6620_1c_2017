@@ -8,11 +8,13 @@ bool validateCacheInfo(string &data);
 
 void validateParams(string params);
 
+string removeAllSpaces(string &str);
+
 unsigned long getBlockSize(string &simulatedCacheInfo);
 
 unsigned long getCacheSize(unsigned long blockSize, string &simulatedCacheInfo);
 
-const int & getWaysSize(unsigned long blockSize, unsigned long cacheSize, string &simulatedCacheInfo);
+const int &getWaysSize(unsigned long blockSize, unsigned long cacheSize, string &simulatedCacheInfo);
 
 int main(int argc, char *argv[]) {
     int parameter;
@@ -23,10 +25,10 @@ int main(int argc, char *argv[]) {
     {
     /* These options don’t set a flag.
      We distinguish them by their indices. */
-    {"version", no_argument,       0, 'v'},
-    {"help",    no_argument,       0, 'h'},
-    {"D1=",     required_argument, 0, 'l'},
-    {0, 0,                         0, 0}
+    {"version", no_argument, 0,          'v'},
+    {"help",    no_argument, 0,          'h'},
+    {"D1=",     required_argument, NULL, 'l'},
+    {0, 0,                   0,          0}
     };
 
     opterr = 0;
@@ -63,7 +65,6 @@ int main(int argc, char *argv[]) {
 
     if (values.size() > 0) {
         validateParams(values);
-        cout << "Params: " << values << endl;
         simulatedCacheInfo.append("--D1=").append(values);
     }
 
@@ -78,69 +79,6 @@ int main(int argc, char *argv[]) {
 
     cout << "#Vias: " << waysQuantity << endl;
     return EXIT_SUCCESS;
-}
-
-unsigned long getBlockSize(string &simulatedCacheInfo) {
-    string moduleName = "blockSize";
-    parser_output blockSizeOutput;
-    string params = "";
-    executeModule(moduleName, simulatedCacheInfo, params);
-    bool success = parseDataMissRate(&blockSizeOutput, moduleName);
-    if (!success) {
-        fprintf(stderr, "There was a problem parsing the %s input.\n", moduleName.c_str());
-        exit(EXIT_FAILURE);
-    }
-
-    return (blockSizeOutput.dr / 2) / blockSizeOutput.d1mr;
-}
-
-unsigned long getCacheSize(unsigned long blockSize, string &simulatedCacheInfo) {
-    string moduleName = "cacheSize";
-    string params = "";
-    unsigned int n = 128;
-    parser_output cacheSizeOutput;
-    cacheSizeOutput.d1mw = 0;
-
-    while (cacheSizeOutput.d1mw <= n) {
-        params.append(to_string(blockSize)).append(" ").append(to_string(n));
-        executeModule(moduleName, simulatedCacheInfo, params);
-        bool success = parseDataMissRate(&cacheSizeOutput, moduleName);
-        if (!success) {
-            fprintf(stderr, "There was a problem parsing the %s input.\n", moduleName.c_str());
-            exit(EXIT_FAILURE);
-        }
-        params.clear();
-        if (n >= cacheSizeOutput.d1mw) {
-            n *= 2;
-        }
-    }
-
-    return n * blockSize;
-}
-
-
-const int & getWaysSize(unsigned long blockSize, unsigned long cacheSize, string &simulatedCacheInfo) {
-    string moduleName = "cacheAssociativity";
-    string cacheAssociativityParams;
-    parser_output associativityOutput;
-    associativityOutput.d1mw = 0;
-    unsigned int n = 1;
-    while (associativityOutput.d1mw == 0) {
-        cacheAssociativityParams.append(to_string(blockSize)).append(" ")
-        .append(to_string(cacheSize)).append(" ").append(to_string(n));
-        executeModule(moduleName, simulatedCacheInfo, cacheAssociativityParams);
-        bool success = parseDataMissRate(&associativityOutput, moduleName);
-        if (!success) {
-            fprintf(stderr, "There was a problem parsing the %s input.\n", moduleName.c_str());
-            exit(EXIT_FAILURE);
-        }
-        cacheAssociativityParams.clear();
-        if (associativityOutput.d1mw == 0) {
-            n = n * 2;
-        }
-    }
-
-    return std::max(1, (int) n / 2);
 }
 
 
@@ -190,4 +128,66 @@ bool validateCacheInfo(string &data) {
         }
     }
     return false;
+}
+
+unsigned long getBlockSize(string &simulatedCacheInfo) {
+    string moduleName = "blockSize";
+    parser_output blockSizeOutput;
+    string params = "";
+    executeModule(moduleName, simulatedCacheInfo, params);
+    bool success = parseDataMissRate(&blockSizeOutput, moduleName);
+    if (!success) {
+        fprintf(stderr, "There was a problem parsing the %s input.\n", moduleName.c_str());
+        exit(EXIT_FAILURE);
+    }
+
+    return (blockSizeOutput.dr / 2) / blockSizeOutput.d1mr;
+}
+
+unsigned long getCacheSize(unsigned long blockSize, string &simulatedCacheInfo) {
+    string moduleName = "cacheSize";
+    string params = "";
+    unsigned int n = 128;
+    parser_output cacheSizeOutput;
+    cacheSizeOutput.d1mw = 0;
+
+    while (cacheSizeOutput.d1mw <= n) {
+        params.append(to_string(blockSize)).append(" ").append(to_string(n));
+        executeModule(moduleName, simulatedCacheInfo, params);
+        bool success = parseDataMissRate(&cacheSizeOutput, moduleName);
+        if (!success) {
+            fprintf(stderr, "There was a problem parsing the %s input.\n", moduleName.c_str());
+            exit(EXIT_FAILURE);
+        }
+        params.clear();
+        if (n >= cacheSizeOutput.d1mw) {
+            n *= 2;
+        }
+    }
+
+    return n * blockSize;
+}
+
+const int &getWaysSize(unsigned long blockSize, unsigned long cacheSize, string &simulatedCacheInfo) {
+    string moduleName = "cacheAssociativity";
+    string cacheAssociativityParams;
+    parser_output associativityOutput;
+    associativityOutput.d1mw = 0;
+    unsigned int n = 1;
+    while (associativityOutput.d1mw == 0) {
+        cacheAssociativityParams.append(to_string(blockSize)).append(" ")
+        .append(to_string(cacheSize)).append(" ").append(to_string(n));
+        executeModule(moduleName, simulatedCacheInfo, cacheAssociativityParams);
+        bool success = parseDataMissRate(&associativityOutput, moduleName);
+        if (!success) {
+            fprintf(stderr, "There was a problem parsing the %s input.\n", moduleName.c_str());
+            exit(EXIT_FAILURE);
+        }
+        cacheAssociativityParams.clear();
+        if (associativityOutput.d1mw == 0) {
+            n = n * 2;
+        }
+    }
+
+    return std::max(1, (int) n / 2);
 }
