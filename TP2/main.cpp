@@ -8,6 +8,12 @@ bool validateCacheInfo(string &data);
 
 void validateParams(string params);
 
+unsigned long getBlockSize(string &simulatedCacheInfo);
+
+unsigned long getCacheSize(unsigned long blockSize, string &simulatedCacheInfo);
+
+const int & getWaysSize(unsigned long blockSize, unsigned long cacheSize, string &simulatedCacheInfo);
+
 int main(int argc, char *argv[]) {
     int parameter;
     string values = "";
@@ -61,6 +67,20 @@ int main(int argc, char *argv[]) {
         simulatedCacheInfo.append("--D1=").append(values);
     }
 
+
+    unsigned long blockSize = getBlockSize(simulatedCacheInfo);
+    cout << "Tamaño de Bloque: " << blockSize << " Bytes" << endl;
+
+    unsigned long cacheSize = getCacheSize(blockSize, simulatedCacheInfo);
+    cout << "Tamaño Total: " << cacheSize << " Bytes" << endl;
+
+    const int &waysQuantity = getWaysSize(blockSize, cacheSize, simulatedCacheInfo);
+
+    cout << "#Vias: " << waysQuantity << endl;
+    return EXIT_SUCCESS;
+}
+
+unsigned long getBlockSize(string &simulatedCacheInfo) {
     string moduleName = "blockSize";
     parser_output blockSizeOutput;
     string params = "";
@@ -71,11 +91,12 @@ int main(int argc, char *argv[]) {
         exit(EXIT_FAILURE);
     }
 
-    unsigned long blockSize = (blockSizeOutput.dr / 2) / blockSizeOutput.d1mr;
-    cout << "Tamaño de Bloque: " << blockSize << " Bytes" << endl;
+    return (blockSizeOutput.dr / 2) / blockSizeOutput.d1mr;
+}
 
-    moduleName = "cacheSize";
-    params = "";
+unsigned long getCacheSize(unsigned long blockSize, string &simulatedCacheInfo) {
+    string moduleName = "cacheSize";
+    string params = "";
     unsigned int n = 128;
     parser_output cacheSizeOutput;
     cacheSizeOutput.d1mw = 0;
@@ -83,7 +104,7 @@ int main(int argc, char *argv[]) {
     while (cacheSizeOutput.d1mw <= n) {
         params.append(to_string(blockSize)).append(" ").append(to_string(n));
         executeModule(moduleName, simulatedCacheInfo, params);
-        success = parseDataMissRate(&cacheSizeOutput, moduleName);
+        bool success = parseDataMissRate(&cacheSizeOutput, moduleName);
         if (!success) {
             fprintf(stderr, "There was a problem parsing the %s input.\n", moduleName.c_str());
             exit(EXIT_FAILURE);
@@ -94,19 +115,21 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    unsigned long cacheSize = n * blockSize;
-    cout << "Tamaño Total: " << cacheSize << " Bytes" << endl;
+    return n * blockSize;
+}
 
-    moduleName = "cacheAssociativity";
+
+const int & getWaysSize(unsigned long blockSize, unsigned long cacheSize, string &simulatedCacheInfo) {
+    string moduleName = "cacheAssociativity";
     string cacheAssociativityParams;
     parser_output associativityOutput;
     associativityOutput.d1mw = 0;
-    n = 1;
+    unsigned int n = 1;
     while (associativityOutput.d1mw == 0) {
         cacheAssociativityParams.append(to_string(blockSize)).append(" ")
         .append(to_string(cacheSize)).append(" ").append(to_string(n));
         executeModule(moduleName, simulatedCacheInfo, cacheAssociativityParams);
-        success = parseDataMissRate(&associativityOutput, moduleName);
+        bool success = parseDataMissRate(&associativityOutput, moduleName);
         if (!success) {
             fprintf(stderr, "There was a problem parsing the %s input.\n", moduleName.c_str());
             exit(EXIT_FAILURE);
@@ -117,9 +140,9 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    cout << "#Vias: " << std::max(1, (int) n / 2) << endl;
-    return EXIT_SUCCESS;
+    return std::max(1, (int) n / 2);
 }
+
 
 void validateParams(string toCheckValues) {
     bool validInfo;
@@ -168,5 +191,3 @@ bool validateCacheInfo(string &data) {
     }
     return false;
 }
-
-
