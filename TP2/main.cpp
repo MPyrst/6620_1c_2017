@@ -8,13 +8,11 @@ bool validateCacheInfo(string &data);
 
 void validateParams(string params);
 
-string removeAllSpaces(string &str);
-
 unsigned long getBlockSize(string &simulatedCacheInfo);
 
 unsigned long getCacheSize(unsigned long blockSize, string &simulatedCacheInfo);
 
-const int &getWaysSize(unsigned long blockSize, unsigned long cacheSize, string &simulatedCacheInfo);
+int getWaysSize(unsigned long blockSize, unsigned long cacheSize, string &simulatedCacheInfo);
 
 int main(int argc, char *argv[]) {
     int parameter;
@@ -168,7 +166,7 @@ unsigned long getCacheSize(unsigned long blockSize, string &simulatedCacheInfo) 
     return n * blockSize;
 }
 
-const int &getWaysSize(unsigned long blockSize, unsigned long cacheSize, string &simulatedCacheInfo) {
+int getWaysSize(unsigned long blockSize, unsigned long cacheSize, string &simulatedCacheInfo) {
     string moduleName = "cacheAssociativity";
     string cacheAssociativityParams;
     parser_output associativityOutput;
@@ -189,5 +187,5 @@ const int &getWaysSize(unsigned long blockSize, unsigned long cacheSize, string 
         }
     }
 
-    return std::max(1, (int) n / 2);
+    return std::max(1, (const int &) associativityOutput.d1mw);
 }

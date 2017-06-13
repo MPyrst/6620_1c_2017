@@ -47,13 +47,13 @@ bool parseDataMissRate(parser_output *parserOutput, string &moduleName) {
     parserOutput->d1mw = stoul(do_replace(tokens[3], ",", ""));
 
 
-    if (remove(inputFile.c_str()) != 0) {
+   /* if (remove(inputFile.c_str()) != 0) {
         fprintf(stderr, "Error removing file %s.\n", inputFile.c_str());
     }
 
     if (remove(outputFile.c_str()) != 0) {
         fprintf(stderr, "Error removing file %s.\n", outputFile.c_str());
-    }
+    }*/
 
     /* cout << "dr:" << parserOutput->dr << endl;
        cout << "dw:" << parserOutput->dw << endl;

@@ -22,6 +22,15 @@ void executeModule(string &moduleName, string &simulatedCacheInfo, string &param
     //cout << "Call: " << cacheGrindCall << endl;
     system(cacheGrindCall.c_str());
 
+    ifstream t(outputFile);
+    if (!t.good()) {
+        fprintf(stderr, "Error executing module %s.\n", moduleName.c_str());
+        t.close();
+        exit(EXIT_FAILURE);
+    }
+
+    t.close();
+
     //cg_annotate --auto=yes --show=Dr,Dw,D1mr,D1mw $(outputFile)
     string cg_annotateCall("cg_annotate --auto=yes --threshold=0.000001 --show=Dr,Dw,D1mr,D1mw ");
     cg_annotateCall.append(outputFile).append(">").append(readableOutput);
