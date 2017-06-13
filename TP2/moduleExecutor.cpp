@@ -26,4 +26,12 @@ void executeModule(string &moduleName, string &simulatedCacheInfo, string &param
     string cg_annotateCall("cg_annotate --auto=yes --threshold=0.000001 --show=Dr,Dw,D1mr,D1mw ");
     cg_annotateCall.append(outputFile).append(">").append(readableOutput);
     system(cg_annotateCall.c_str());
+
+    if (remove(logFile.c_str()) != 0) {
+        fprintf(stderr, "Error removing file %s.\n", logFile.c_str());
+    }
+
+    if (remove(outputFile.c_str()) != 0) {
+        fprintf(stderr, "Error removing file %s.\n", outputFile.c_str());
+    }
 }

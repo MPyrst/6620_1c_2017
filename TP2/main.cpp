@@ -102,9 +102,13 @@ int main(int argc, char *argv[]) {
     parser_output blockSizeOutput;
     string params = "";
     executeModule(moduleName, simulatedCacheInfo, params);
-    parseDataMissRate(&blockSizeOutput, moduleName);
+    bool success = parseDataMissRate(&blockSizeOutput, moduleName);
+    if (!success) {
+        fprintf(stderr, "There was a problem parsing the %s input.\n", moduleName.c_str());
+        exit(EXIT_FAILURE);
+    }
 
-    unsigned long blockSize = (blockSizeOutput.dr / 2) / blockSizeOutput.d1mr + 1;
+    unsigned long blockSize = (blockSizeOutput.dr / 2) / blockSizeOutput.d1mr;
     cout << "Tamaño de Bloque: " << blockSize << " Bytes" << endl;
 
     moduleName = "cacheSize";
@@ -116,7 +120,11 @@ int main(int argc, char *argv[]) {
     while (cacheSizeOutput.d1mw <= n) {
         params.append(to_string(blockSize)).append(" ").append(to_string(n));
         executeModule(moduleName, simulatedCacheInfo, params);
-        parseDataMissRate(&cacheSizeOutput, moduleName);
+        success = parseDataMissRate(&cacheSizeOutput, moduleName);
+        if (!success) {
+            fprintf(stderr, "There was a problem parsing the %s input.\n", moduleName.c_str());
+            exit(EXIT_FAILURE);
+        }
         params.clear();
         if (n >= cacheSizeOutput.d1mw) {
             n *= 2;
@@ -136,7 +144,11 @@ int main(int argc, char *argv[]) {
         cacheAssociativityParams.append(to_string(blockSize)).append(" ")
         .append(to_string(cacheSize)).append(" ").append(to_string(n));
         executeModule(moduleName, simulatedCacheInfo, cacheAssociativityParams);
-        parseDataMissRate(&associativityOutput, moduleName);
+        success = parseDataMissRate(&associativityOutput, moduleName);
+        if (!success) {
+            fprintf(stderr, "There was a problem parsing the %s input.\n", moduleName.c_str());
+            exit(EXIT_FAILURE);
+        }
         cacheAssociativityParams.clear();
         if (associativityOutput.d1mw == 0) {
             n = n * 2;
