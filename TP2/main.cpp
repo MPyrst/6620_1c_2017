@@ -4,7 +4,9 @@
 #include <getopt.h>
 #include <moduleExecutor.h>
 
-bool validateCacheInfo(string data);
+bool validateCacheInfo(string &data);
+
+void validateParams(string params);
 
 int main(int argc, char *argv[]) {
     int parameter;
@@ -53,48 +55,9 @@ int main(int argc, char *argv[]) {
                 exit(EXIT_FAILURE);
         }
 
-
-    bool validInfo;
-    string toCheckValues = values;
-
-    if (toCheckValues.size() > 0) {
-        string aux = "";
-        size_t pos = toCheckValues.find(',');
-        if (pos != std::string::npos) {
-            aux = toCheckValues.substr(0, pos);
-            validInfo = validateCacheInfo(aux);
-            if (!validInfo) {
-                fprintf(stderr, "The size info is not valid.\n");
-                exit(EXIT_FAILURE);
-            }
-            aux.clear();
-            toCheckValues = toCheckValues.substr(pos + 1);
-            pos = toCheckValues.find(',');
-            if (pos != std::string::npos) {
-                aux = toCheckValues.substr(0, pos);
-                validInfo = validateCacheInfo(aux);
-                if (!validInfo) {
-                    fprintf(stderr, "The ways info is not valid.\n");
-                    exit(EXIT_FAILURE);
-                }
-                aux.clear();
-                aux = toCheckValues.substr(pos + 1);
-                validInfo = validateCacheInfo(aux);
-                if (!validInfo) {
-                    fprintf(stderr, "The bytes per line info is not valid.\n");
-                    exit(EXIT_FAILURE);
-                }
-            } else {
-                fprintf(stderr, "The info of the cache is not valid.\n");
-                exit(EXIT_FAILURE);
-            }
-        } else {
-            fprintf(stderr, "The info of the cache is not valid.\n");
-            exit(EXIT_FAILURE);
-        }
-    }
-
-    if (!values.empty()) {
+    if (values.size() > 0) {
+        validateParams(values);
+        cout << "Params: " << values << endl;
         simulatedCacheInfo.append("--D1=").append(values);
     }
 
@@ -134,7 +97,6 @@ int main(int argc, char *argv[]) {
     unsigned long cacheSize = n * blockSize;
     cout << "Tamaño Total: " << cacheSize << " Bytes" << endl;
 
-
     moduleName = "cacheAssociativity";
     string cacheAssociativityParams;
     parser_output associativityOutput;
@@ -155,11 +117,49 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    cout << "#Vias: " << n / 2 << endl;
+    cout << "#Vias: " << std::max(1, (int) n / 2) << endl;
     return EXIT_SUCCESS;
 }
 
-bool validateCacheInfo(string data) {
+void validateParams(string toCheckValues) {
+    bool validInfo;
+    string aux = "";
+    size_t pos = toCheckValues.find(',');
+    if (pos != std::string::npos) {
+        aux = toCheckValues.substr(0, pos);
+        validInfo = validateCacheInfo(aux);
+        if (!validInfo) {
+            fprintf(stderr, "The size info is not valid.\n");
+            exit(EXIT_FAILURE);
+        }
+        aux.clear();
+        toCheckValues = toCheckValues.substr(pos + 1);
+        pos = toCheckValues.find(',');
+        if (pos != std::string::npos) {
+            aux = toCheckValues.substr(0, pos);
+            validInfo = validateCacheInfo(aux);
+            if (!validInfo) {
+                fprintf(stderr, "The ways info is not valid.\n");
+                exit(EXIT_FAILURE);
+            }
+            aux.clear();
+            aux = toCheckValues.substr(pos + 1);
+            validInfo = validateCacheInfo(aux);
+            if (!validInfo) {
+                fprintf(stderr, "The bytes per line info is not valid.\n");
+                exit(EXIT_FAILURE);
+            }
+        } else {
+            fprintf(stderr, "The info of the cache is not valid.\n");
+            exit(EXIT_FAILURE);
+        }
+    } else {
+        fprintf(stderr, "The info of the cache is not valid.\n");
+        exit(EXIT_FAILURE);
+    }
+}
+
+bool validateCacheInfo(string &data) {
     int aux = stoi(data);
     if (aux > 0) {
         if (aux == 1 || ((aux & (aux - 1)) == 0)) {
