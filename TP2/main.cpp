@@ -12,7 +12,7 @@ unsigned long getBlockSize(string &simulatedCacheInfo);
 
 unsigned long getCacheSize(unsigned long blockSize, string &simulatedCacheInfo);
 
-int getWaysSize(unsigned long blockSize, unsigned long cacheSize, string &simulatedCacheInfo);
+int getWaysQuantity(unsigned long blockSize, unsigned long cacheSize, string &simulatedCacheInfo);
 
 int main(int argc, char *argv[]) {
     int parameter;
@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
     unsigned long cacheSize = getCacheSize(blockSize, simulatedCacheInfo);
     cout << "Tamaño Total: " << cacheSize << " Bytes" << endl;
 
-    const int &waysQuantity = getWaysSize(blockSize, cacheSize, simulatedCacheInfo);
+    const int &waysQuantity = getWaysQuantity(blockSize, cacheSize, simulatedCacheInfo);
 
     cout << "#Vias: " << waysQuantity << endl;
     return EXIT_SUCCESS;
@@ -166,7 +166,7 @@ unsigned long getCacheSize(unsigned long blockSize, string &simulatedCacheInfo) 
     return n * blockSize;
 }
 
-int getWaysSize(unsigned long blockSize, unsigned long cacheSize, string &simulatedCacheInfo) {
+int getWaysQuantity(unsigned long blockSize, unsigned long cacheSize, string &simulatedCacheInfo) {
     string moduleName = "cacheAssociativity";
     string cacheAssociativityParams;
     parser_output associativityOutput;
@@ -181,11 +181,12 @@ int getWaysSize(unsigned long blockSize, unsigned long cacheSize, string &simula
             fprintf(stderr, "There was a problem parsing the %s input.\n", moduleName.c_str());
             exit(EXIT_FAILURE);
         }
+        //cout << "N: " << n << " d1mw: " << associativityOutput.d1mw << endl;
         cacheAssociativityParams.clear();
         if (associativityOutput.d1mw == 0) {
             n = n * 2;
         }
     }
 
-    return std::max(1, (const int &) associativityOutput.d1mw);
+    return std::max(1, (const int &) n / 2);
 }

@@ -7,10 +7,10 @@
 using namespace std;
 
 void cacheAssociativity(register unsigned int n,
-                        char *array, unsigned int waySize) {
-    register unsigned int j = 0;
-    for (j = 0; j < n; j++) {
-        *(array + j * waySize) = 'E';
+                        char *array, unsigned int cacheSize) {
+    register unsigned int i = 0;
+    for (i = 0; i < n; i++) {
+        *(array + i * cacheSize) = 'E';
     }
 }
 
@@ -20,28 +20,23 @@ int main(int argc, char *argv[]) {
     unsigned int cacheSize = (unsigned int) std::stoul(argv[2]);
     unsigned int n = (unsigned int) std::stoul(argv[3]);
 
-
     register unsigned int i = 0;
-    char *array = (char *) malloc(cacheSize);
+    char *array = (char *) malloc(cacheSize * n);
 
-    register unsigned int blocksQuantity = cacheSize / blockSize / n;
+    if (array == NULL) {
+        fprintf(stderr, "Too big malloc of: %d", cacheSize * n);
+        exit(EXIT_FAILURE);
+    }
 
     register unsigned int iterations = 0;
 
-    register unsigned int j = 0;
-    unsigned int waySize = cacheSize / n;
-
     for (iterations = 0; iterations < 100; iterations++) {
-        for (i = 0; i < blocksQuantity; i++) {//blocks along same way
-            for (j = 0; j < n; j++) {//#n ways
-                *(array + i * blockSize + j * waySize) = 'D';
-                /*cout << "i: " << i << " j: " << j << " BlockSize: " << blockSize << "Dir:" <<
-                *(i * blockSize + j * n + array) << endl;*/
-            }
+        for (i = 0; i < n; i++) {//#n ways
+            *(array + i * cacheSize) = 'D';
         }
     }
 
-    cacheAssociativity(n, array, waySize);
+    cacheAssociativity(n, array, cacheSize);
 
     delete[] array;
 
