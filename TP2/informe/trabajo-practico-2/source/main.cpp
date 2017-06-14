@@ -67,10 +67,10 @@ int main(int argc, char *argv[]) {
 
 
     unsigned long blockSize = getBlockSize(simulatedCacheInfo);
-    cout << "Tamaño de Bloque: " << blockSize << " Bytes" << endl;
+    cout << "Tamanio de Bloque: " << blockSize << " Bytes" << endl;
 
     unsigned long cacheSize = getCacheSize(blockSize, simulatedCacheInfo);
-    cout << "Tamaño Total: " << cacheSize << " Bytes" << endl;
+    cout << "Tamanio Total: " << cacheSize << " Bytes" << endl;
 
     const int &waysQuantity = getWaysQuantity(blockSize, cacheSize, simulatedCacheInfo);
 
