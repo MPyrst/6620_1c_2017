@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.5)
 set(PROJECT_NAME "tp2")
 project(${PROJECT_NAME} C CXX)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -g -Wno-unused-variable -O0")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -Wall -g -Wno-unused-variable -O0 -Wunused-but-set-variable")
 
 include_directories(.)
 

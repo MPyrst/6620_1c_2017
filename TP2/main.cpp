@@ -117,6 +117,28 @@ void validateParams(string toCheckValues) {
     }
 }
 
+unsigned long getNearestPowOfTwo(unsigned long result) {
+
+    unsigned long nearestPowValue = result;
+
+    //Already a power of two
+    if (!(result > 0 && ((result & (result - 1)) == 0))) {
+        unsigned long floor = (unsigned long) log2(result);
+        unsigned long previousPowValue = (unsigned long) (1 << floor);
+        unsigned long nextPowValue = previousPowValue << 1;
+        unsigned long previousPowDiff = (unsigned long) abs((int) (previousPowValue - result));
+        unsigned long nextPowDiff = (unsigned long) abs(nextPowValue - result);
+
+        if (previousPowDiff < nextPowDiff) {
+            nearestPowValue = previousPowValue;
+        } else {
+            nearestPowValue = nextPowValue;
+        }
+    }
+
+    return nearestPowValue;
+}
+
 bool validateCacheInfo(string &data) {
     int aux = stoi(data);
     if (aux > 0) {
@@ -138,7 +160,7 @@ unsigned long getBlockSize(string &simulatedCacheInfo) {
         exit(EXIT_FAILURE);
     }
 
-    return (blockSizeOutput.dr / 2) / blockSizeOutput.d1mr;
+    return getNearestPowOfTwo((blockSizeOutput.dr / 2) / blockSizeOutput.d1mr);
 }
 
 unsigned long getCacheSize(unsigned long blockSize, string &simulatedCacheInfo) {
